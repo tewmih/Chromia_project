@@ -1,0 +1,126 @@
+{
+  "tasks": [
+    {
+      "id": "task1",
+      "title": "Buy groceries",
+      "user": "John Doe",
+      "description": "Buy milk, bread, and eggs from the store",
+      "due_date": "2025-01-30T10:00:00Z",
+      "priority_val": "high",
+      "created_at": "2025-01-24T12:00:00Z",
+      "status": "pending",
+      "updated_at": "2025-01-24T12:00:00Z"
+    },
+    {
+      "id": "task2",
+      "title": "Submit project report",
+      "user": "Jane Smith",
+      "description": "Finalize and submit the project report to the manager",
+      "due_date": "2025-02-01T15:00:00Z",
+      "priority_val": "medium",
+      "created_at": "2025-01-20T09:00:00Z",
+      "status": "completed",
+      "updated_at": "2025-01-22T14:00:00Z"
+    },
+    {
+      "id": "task3",
+      "title": "Schedule meeting",
+      "user": "John Doe",
+      "description": "Schedule a meeting with the team for next week",
+      "due_date": "2025-01-28T14:00:00Z",
+      "priority_val": "low",
+      "created_at": "2025-01-23T11:30:00Z",
+      "status": "pending",
+      "updated_at": "2025-01-23T11:30:00Z"
+    },
+    {
+      "id": "task4",
+      "title": "Plan weekend trip",
+      "user": "Jane Smith",
+      "description": "Plan the itinerary for the upcoming weekend trip",
+      "due_date": "2025-01-27T18:00:00Z",
+      "priority_val": "medium",
+      "created_at": "2025-01-22T08:45:00Z",
+      "status": "pending",
+      "updated_at": "2025-01-22T08:45:00Z"
+    },
+    {
+      "id": "task5",
+      "title": "Organize workspace",
+      "user": "John Doe",
+      "description": "Clean and organize the workspace for better productivity",
+      "due_date": "2025-01-29T09:00:00Z",
+      "priority_val": "low",
+      "created_at": "2025-01-21T13:20:00Z",
+      "status": "completed",
+      "updated_at": "2025-01-22T10:15:00Z"
+    },
+    {
+      "id": "task6",
+      "title": "Prepare presentation",
+      "user": "Jane Smith",
+      "description": "Prepare slides for the upcoming client meeting",
+      "due_date": "2025-01-31T11:00:00Z",
+      "priority_val": "high",
+      "created_at": "2025-01-18T16:00:00Z",
+      "status": "pending",
+      "updated_at": "2025-01-20T10:00:00Z"
+    },
+    {
+      "id": "task7",
+      "title": "Call supplier",
+      "user": "John Doe",
+      "description": "Follow up on the delivery status of office supplies",
+      "due_date": "2025-01-26T17:00:00Z",
+      "priority_val": "medium",
+      "created_at": "2025-01-23T14:30:00Z",
+      "status": "pending",
+      "updated_at": "2025-01-23T14:30:00Z"
+    },
+    {
+      "id": "task8",
+      "title": "Review codebase",
+      "user": "Jane Smith",
+      "description": "Review the latest changes in the codebase for errors",
+      "due_date": "2025-01-25T13:00:00Z",
+      "priority_val": "high",
+      "created_at": "2025-01-22T09:00:00Z",
+      "status": "completed",
+      "updated_at": "2025-01-23T12:00:00Z"
+    },
+    {
+      "id": "task9",
+      "title": "Plan team lunch",
+      "user": "John Doe",
+      "description": "Organize a lunch outing for the team",
+      "due_date": "2025-01-27T12:00:00Z",
+      "priority_val": "low",
+      "created_at": "2025-01-21T11:00:00Z",
+      "status": "pending",
+      "updated_at": "2025-01-21T11:00:00Z"
+    },
+    {
+      "id": "task10",
+      "title": "Fix server issues",
+      "user": "Jane Smith",
+      "description": "Investigate and resolve server downtime problems",
+      "due_date": "2025-01-29T20:00:00Z",
+      "priority_val": "high",
+      "created_at": "2025-01-23T15:00:00Z",
+      "status": "pending",
+      "updated_at": "2025-01-23T15:00:00Z"
+    },
+    {
+      "id": "58c9c424-7318-4b31-8d05-dd500e44a47c",
+      "name": "",
+      "description": "",
+      "priority": ""
+    },
+    {
+      "id": "a07c9508-8633-4015-b289-3a9e96722fc7",
+      "title": "",
+      "description": "",
+      "priority_val": ""
+    }
+  ]
+}
