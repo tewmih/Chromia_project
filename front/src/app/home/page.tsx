@@ -1,3 +1,4 @@
+import FilterComponent from '@/components/FilterComponent';
 import ToDoList from '@/components/ToDoList'
 import { GetAlltodos } from '@/lib/api'
 import React from 'react'
@@ -7,6 +8,7 @@ import React from 'react'
   // console.log("tasks: " + [...tasks]);
   return (
     <div>
+      <FilterComponent tasks={tasks} />
       <ToDoList tasks={tasks} />
     </div>
   )

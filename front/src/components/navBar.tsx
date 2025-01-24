@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import AddTask from "./AddTask";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -11,13 +12,10 @@ export default function Navbar() {
   const links = [
     { name: "Home", href: "/" },
     { name: "Filters", href: "/filters" },
-    { name: "Labels", href: "/labels" },
-    { name: "Upcoming", href: "/upcoming" },
-    { name: "Projects", href: "/projects" },
   ];
 
   return (
-    <header className="bg-gray-800 !bg-gray-800 text-gray-300 shadow-lg fixed top-0 left-0 w-full z-50 border-b-2 border-gray-600 shadow-md mb-5">
+    <header className="bg-fuchsia-950 text-gray-300 shadow-lg fixed top-0 left-0 w-full z-50 border-b border-gray-600">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -44,42 +42,48 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <span className="sr-only">Open Menu</span>
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          {/* Mobile Menu Button and Wallet Button */}
+          <div className="flex items-center space-x-4">
+            <AddTask />
+            <button className="flex items-center  bg-gradient-to-r from-blue-600 to-purple-700 text-white px-6 py-2 rounded-full shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105">
+              Connect Wallet
+            </button>
+            <button
+              className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          </button>
+              <span className="sr-only">Open Menu</span>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Links */}
       {isMobileMenuOpen && (
-        <nav className="md:hidden bg-gray-900 border-t border-gray-700">
-          <ul className="space-y-4 p-4">
+        <nav className="md:hidden bg-gray-900 border-t border-gray-700 fixed right-0 top-16 w-16 h-screen shadow-lg">
+          <ul className="flex flex-col items-end space-y-4 p-2">
             {links.map((link) => (
-              <li key={link.name}>
+              <li key={link.name} className="w-full">
                 <Link
                   href={link.href}
-                  className={`block ${
+                  className={`block w-full text-right pr-4 py-2 ${
                     pathname === link.href
-                      ? "text-blue-400 border-l-4 border-blue-400 pl-2"
-                      : "hover:text-blue-400 hover:border-l-4 hover:border-blue-400 pl-2"
+                      ? "text-blue-400 border-r-4 border-blue-400"
+                      : "hover:text-blue-400 hover:border-r-4 hover:border-blue-400"
                   } transition-all`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

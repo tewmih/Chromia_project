@@ -63,7 +63,7 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
 
   return (
     <div className="p-6 font-sans">
-      <h2 className="text-2xl font-bold mb-4">Task Manager</h2>
+      <h2 className="text-2xl font-bold mb-4 absolute top-16 z-10">Filter by</h2>
 
       {/* Loading/Error State */}
       {loading && <p>Loading tasks...</p>}
@@ -72,13 +72,13 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
       {/* Filters */}
       {!loading && !error && (
         <>
-          <div className="mb-5">
+          <div className="flex items-center mb-2" >
             <label className="mr-3">
               Priority:
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="ml-2 p-2 border border-gray-300 rounded"
+                className="ml-2 border border-gray-300 rounded"
               >
                 <option value="">All</option>
                 <option value="high">High</option>
@@ -92,7 +92,7 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="ml-2 p-2 border border-gray-300 rounded"
+                className="ml-2 border border-gray-300 rounded"
               >
                 <option value="">All</option>
                 <option value="pending">Pending</option>
@@ -105,7 +105,7 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="ml-2 p-2 border border-gray-300 rounded"
+                className="ml-2 border border-gray-300 rounded"
               >
                 <option value="">None</option>
                 <option value="due_date">Due Date</option>
@@ -118,11 +118,12 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
                 setStatus("");
                 setSortBy("");
               }}
-              className="ml-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="ml-3 w-20 h-6 top-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-              Reset Filters
+              Reset
             </button>
           </div>
+          <hr  className="bg-slate-800"/>
 
           {/* Task List */}
           <div>

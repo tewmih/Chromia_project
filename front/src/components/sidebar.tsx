@@ -14,17 +14,16 @@ const Sidebar: React.FC = () => {
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   const routes = [
-    { name: 'today', path: '/home', icon: <AiOutlineHome size={20} /> },
+    { name: 'To-Dos', path: '/home', icon: <AiOutlineHome size={20} /> },
     { name: 'Add Task', path: '/add', icon: <LiaPlusCircleSolid size={20} /> },
     { name: 'Upcoming', path: '/upcoming', icon: <AiOutlineCalendar size={20} /> },
-    { name: 'Filters & Labels', path: '/filters', icon: <AiOutlineFilter size={20} /> },
   ];
 
   return (
     <aside
       className={`${
-        isCollapsed ? 'w-20' : 'w-64'
-      } bg-gray-900 h-screen p-4 border-r border-gray-700 text-gray-300 transition-all duration-300 mt-16`}
+        isCollapsed ? 'w-20' : 'w-26'
+      } !bg-fuchsia-950 h-screen p-4 border-r border-gray-700 text-gray-300 transition-all duration-300 mt-16`}
     >
       {/* Toggle Button */}
       <button
@@ -35,10 +34,10 @@ const Sidebar: React.FC = () => {
       </button>
 
       {/* Sidebar Content */}
-      <h2 className={`text-lg font-semibold mb-6 text-gray-400 ${isCollapsed ? 'hidden' : ''}`}>
+      {/* <h2 className={`text-lg font-semibold mb-6 text-gray-400 ${isCollapsed ? 'hidden' : ''}`}>
         My Projects
-      </h2>
-      <ul className="space-y-2">
+      </h2> */}
+      <ul className="space-y-4">
         {routes.map((route) => (
           <li key={route.path}>
             <Link

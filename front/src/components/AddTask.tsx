@@ -33,12 +33,12 @@ const AddTask = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 p-6">
+    <div className="flex flex-col items-center ">
       <button
-        className="btn btn-primary flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105"
+        className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py- rounded h-4 text-[10px] leading-none shadow-sm hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105"
         onClick={() => setModalOpen(true)}
       >
-        Add Task <FaPlus size={20} />
+        Add Task <FaPlus size={15} />
       </button>
 
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
@@ -97,7 +97,7 @@ const AddTask = () => {
 
           <button
             type="submit"
-            className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-teal-600 hover:to-green-500 transition-transform transform hover:scale-105"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-blue-600 hover:to-purp;e-500 transition-transform transform hover:scale-105"
           >
             Submit
           </button>

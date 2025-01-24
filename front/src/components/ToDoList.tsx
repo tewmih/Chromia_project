@@ -10,7 +10,7 @@ const ToDoList: React.FC<taskInterface> = ({ tasks }) => {
     <div>
       <div className="overflow-x-auto m-8 w-full">
         <table className="table ">
-        <thead>
+        {/* <thead>
           <tr>
             <th className="border border-gray-300 px-4 py-2 bg-gray-950 text-lg font-bold">
               Heading 1
@@ -19,7 +19,7 @@ const ToDoList: React.FC<taskInterface> = ({ tasks }) => {
               Heading 2
             </th>
           </tr>
-        </thead>
+        </thead> */}
           <tbody>
             
             {/* row 1 */}
