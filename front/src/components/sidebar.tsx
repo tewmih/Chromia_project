@@ -6,18 +6,11 @@ import { usePathname } from 'next/navigation';
 import { LiaPlusCircleSolid } from 'react-icons/lia';
 import { AiOutlineInbox, AiOutlineHome, AiOutlineCalendar, AiOutlineFilter } from 'react-icons/ai';
 
-
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
-
-  const routes = [
-    { name: 'To-Dos', path: '/home', icon: <AiOutlineHome size={20} /> },
-    { name: 'Add Task', path: '/add', icon: <LiaPlusCircleSolid size={20} /> },
-    { name: 'Upcoming', path: '/upcoming', icon: <AiOutlineCalendar size={20} /> },
-  ];
 
   return (
     <aside
@@ -34,25 +27,46 @@ const Sidebar: React.FC = () => {
       </button>
 
       {/* Sidebar Content */}
-      {/* <h2 className={`text-lg font-semibold mb-6 text-gray-400 ${isCollapsed ? 'hidden' : ''}`}>
-        My Projects
-      </h2> */}
       <ul className="space-y-4">
-        {routes.map((route) => (
-          <li key={route.path}>
-            <Link
-              href={route.path}
-              className={`flex items-center gap-3 px-4 py-2 rounded-md ${
-                pathname === route.path
-                  ? 'bg-gray-700 text-white'
-                  : 'hover:bg-gray-800 hover:text-white'
-              }`}
-            >
-              <span>{route.icon}</span>
-              <span className={isCollapsed ? 'hidden' : ''}>{route.name}</span>
-            </Link>
-          </li>
-        ))}
+        <li>
+          <Link
+            href="/home"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md ${
+              pathname === '/home'
+                ? 'bg-gray-700 text-white'
+                : 'hover:bg-gray-800 hover:text-white'
+            }`}
+          >
+            <AiOutlineHome size={20} />
+            <span className={isCollapsed ? 'hidden' : ''}>To-Dos</span>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/add"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md ${
+              pathname === '/add'
+                ? 'bg-gray-700 text-white'
+                : 'hover:bg-gray-800 hover:text-white'
+            }`}
+          >
+            <LiaPlusCircleSolid size={20} />
+            <span className={isCollapsed ? 'hidden' : ''}>Add Task</span>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/upcoming"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md ${
+              pathname === '/upcoming'
+                ? 'bg-gray-700 text-white'
+                : 'hover:bg-gray-800 hover:text-white'
+            }`}
+          >
+            <AiOutlineCalendar size={20} />
+            <span className={isCollapsed ? 'hidden' : ''}>Upcoming</span>
+          </Link>
+        </li>
       </ul>
     </aside>
   );

@@ -35,7 +35,7 @@ const AddTask = () => {
   return (
     <div className="flex flex-col items-center ">
       <button
-        className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py- rounded h-4 text-[10px] leading-none shadow-sm hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105"
+        className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py-4 rounded h-4 text-[10px] leading-none shadow-sm hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105"
         onClick={() => setModalOpen(true)}
       >
         Add Task <FaPlus size={15} />
