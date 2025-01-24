@@ -1,0 +1,18 @@
+module;
+
+import ^.lib.ft4.core.accounts.strategies.open;
+import ^.lib.ft4.core.accounts.strategies.{ register_account };
+
+
+// import ^.lib.ft4.core.assets.{asset,Unsafe};
+
+import ^.lib.ft4.core.auth;
+import ^.lib.ft4.core.accounts.{account, create_account_with_auth, single_sig_auth_descriptor};//remove unused imports
+// import ^.lib.ft4.utils.{last_known_time}
+
+
+
+@extend(auth.auth_handler)
+function () = auth.add_auth_handler(
+    flags = ["T"]
+);

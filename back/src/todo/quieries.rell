@@ -1,0 +1,32 @@
+// query get_user(){
+//     return user @*{}($.to_struct());
+// }
+query get_user() {
+    return user @* { } ( $ );
+    //6,12
+}
+
+query get_transaction() {
+    return transaction @* { } ( $.to_struct() );
+}
+
+//task related functions
+
+query get_all_task() {
+    return task @* { } ( $.to_struct() );
+}
+query get_pending_tasks(user) {
+  require(is_user(user), "Not the owner of the task");
+  return task @* { .status==is_completed.pending}(
+    @sort_desc @omit .created_at ,
+    $.to_struct()
+    );
+
+}
+query get_completed_tasks(user) {
+    require(is_user(user), "only the owner of the task is allowed to see tasks");
+
+    return task @* { .status==is_completed.completed}(
+        @sort_desc .created_at,
+        $.to_struct());
+}

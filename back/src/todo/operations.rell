@@ -1,0 +1,58 @@
+operation create_user(name, pubkey) {
+    // val account=register_account();
+    val account = create_account_with_auth(single_sig_auth_descriptor(pubkey, set(["A", "T"])));
+    require(not name.empty(), "Name is required");
+    create user ( name, account.id, account );
+}
+
+operation create_task(account, title: text, description: text, priority, due_date: integer) {
+    // val account =auth.authenticate();
+    val user = user @ { account.id } ( $ );
+    require(not title.empty(), "title is required");
+    require(not description.empty(), "Description is required");
+    // require(priority in [priority.high,medium,priority.low], "Priority is required");
+    val date = last_known_time() + due_date;
+    create task ( title, user, description, .priority_val = priority, .due_date = date );
+}
+
+operation update_task(title: text?, user, description: text?, priority?, id: byte_array, date: integer?) {
+//    title= title==null? task @{.id}($.title):title;
+    require(op_context.is_signer(user.id), "Only the owner can call this operation");
+    var updated_title = task @ { id } ( $.title );
+    if (title != null) {
+        updated_title = title;
+    }
+    var updated_priority = task @ { id } ( $.priority_val );
+    if (priority != null) {
+        updated_priority = priority;
+    }
+    var updated_due_date = task @ { .due_date == date } ( $.due_date );
+    if (date != null) {
+        updated_due_date = date;
+    }
+    var updated_description = task @ { .description == description } ( $.description );
+    if (description != null) {
+        updated_description = description;
+    }
+
+    update task @ {
+        id
+    } (
+        .priority_val = updated_priority,
+        .title = updated_title,
+        .description = updated_description,
+        .due_date = updated_due_date,
+        .updated_at = last_known_time()
+    );
+}
+
+operation complete_task(id: byte_array, user) {
+    require(op_context.is_signer(user.id), "only the owner completes the task");
+    update task @ { id } ( .status = is_completed.completed );
+}
+
+operation delete_task(id: byte_array, user) {
+    require(op_context.is_signer(user.id), "Only the owner can call this operation");
+    delete task @ { id };
+}
+
