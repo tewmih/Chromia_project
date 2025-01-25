@@ -11,7 +11,6 @@ export default function Navbar() {
 
   const links = [
     { name: "Home", href: "/" },
-    { name: "Filters", href: "/filters" },
   ];
 
   return (
@@ -20,13 +19,17 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="text-xl font-bold text-white">
-            <Link href="/" className="hover:text-blue-400 transition-colors">
+            <Link
+              href="/"
+              className="hover:text-blue-400 transition-colors"
+            >
               To-Do App
             </Link>
           </div>
 
           {/* Desktop Links */}
           <nav className="hidden md:flex space-x-6">
+            <AddTask />
             {links.map((link) => (
               <Link
                 key={link.name}
@@ -42,48 +45,52 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Mobile Menu Button and Wallet Button */}
-          <div className="flex items-center space-x-4">
-            <AddTask />
-            <button className="flex items-center  bg-gradient-to-r from-blue-600 to-purple-700 text-white px-6 py-2 rounded-full shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105">
-              Connect Wallet
-            </button>
-            <button
-              className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          {/* Connect Wallet Button */}
+          <button className="flex items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-4 py-2 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105">
+            Connect Wallet
+          </button>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <span className="sr-only">Open Menu</span>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <span className="sr-only">Open Menu</span>
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
-      {/* Mobile Links */}
+      {/* Mobile Side Menu */}
       {isMobileMenuOpen && (
-        <nav className="md:hidden bg-gray-900 border-t border-gray-700 fixed right-0 top-16 w-16 h-screen shadow-lg">
-          <ul className="flex flex-col items-end space-y-4 p-2">
+        <nav className="md:hidden bg-gray-900 border-t border-gray-700 fixed right-0 top-16 w-64 h-screen shadow-lg">
+          <ul className="flex flex-col space-y-4 p-4">
+            <li>
+              <div className="block text-left px-4 py-2">
+                <AddTask />
+              </div>
+            </li>
             {links.map((link) => (
-              <li key={link.name} className="w-full">
+              <li key={link.name}>
                 <Link
                   href={link.href}
-                  className={`block w-full text-right pr-4 py-2 ${
+                  className={`block text-left px-4 py-2 ${
                     pathname === link.href
-                      ? "text-blue-400 border-r-4 border-blue-400"
-                      : "hover:text-blue-400 hover:border-r-4 hover:border-blue-400"
+                      ? "text-blue-400 border-l-4 border-blue-400"
+                      : "hover:text-blue-400 hover:border-l-4 hover:border-blue-400"
                   } transition-all`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
