@@ -63,7 +63,7 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
 
   return (
     <div className="p-6 font-sans">
-      <h2 className="text-2xl font-bold mb-4 absolute top-16 z-10">Filter by</h2>
+      <h2 className="text-2xl font-bold mb-4 absolute top-16 z-10">Filter</h2>
 
       {/* Loading/Error State */}
       {loading && <p>Loading tasks...</p>}
