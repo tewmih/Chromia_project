@@ -9,7 +9,7 @@ const AddTask = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="">
       <button
         className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded shadow-md hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105"
         onClick={() => setModalOpen(true)}

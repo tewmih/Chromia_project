@@ -17,6 +17,7 @@ export interface ITask {
   updated_at?: string; // Optional timestamp for the last update
 }
 
+
 // Interface for the filter criteria
 export interface FilterMethod {
   name?: string; // Optional filter by task name

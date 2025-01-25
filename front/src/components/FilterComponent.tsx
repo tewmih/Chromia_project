@@ -55,25 +55,23 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
 
     // Apply sorting
     if (sortBy === "due_date") {
-      result.sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime());
+      result.sort(
+        (a, b) =>
+          new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+      );
     }
 
     setFilteredTasks(result);
   }, [priority, status, sortBy, taskSet]);
 
   return (
-    <div className="p-6 font-sans">
-      <h2 className="text-2xl font-bold mb-4 absolute top-16 z-10">Filter by</h2>
-
-      {/* Loading/Error State */}
+    <div>
       {loading && <p>Loading tasks...</p>}
       {error && <p className="text-red-500">{error}</p>}
-
-      {/* Filters */}
       {!loading && !error && (
         <>
-          <div className="flex items-center mb-2" >
-            <label className="mr-3">
+          <div className="flex items-center mb-2">
+            <label className="p-2">
               Priority:
               <select
                 value={priority}
@@ -87,7 +85,7 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
               </select>
             </label>
 
-            <label className="mr-3">
+            <label className="mr-2">
               Status:
               <select
                 value={status}
@@ -118,44 +116,38 @@ const TaskFilter: React.FC<TaskInterface> = ({ tasks }) => {
                 setStatus("");
                 setSortBy("");
               }}
-              className="ml-3 w-20 h-6 top-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="ml-2 w-20 h-6 top-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Reset
             </button>
           </div>
-          <hr  className="bg-slate-800"/>
-
-          {/* Task List */}
-          <div>
-            {filteredTasks && filteredTasks.length > 0 ? (
-              <ul className="list-none p-0">
-                {filteredTasks.map((task) => (
-                  <li
-                    key={task.id}
-                    className="border border-gray-300 rounded-lg p-4 mb-4"
-                  >
-                    <h3 className="text-xl font-semibold">{task.title}</h3>
-                    <p>
-                      <strong>Description:</strong> {task.description}
-                    </p>
-                    <p>
-                      <strong>Priority:</strong> {task.priority_val}
-                    </p>
-                    <p>
-                      <strong>Status:</strong> {task.status}
-                    </p>
-                    <p>
-                      <strong>Due Date:</strong> {new Date(task.due_date).toLocaleString()}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No tasks found.</p>
-            )}
+          <hr className="bg-slate-800" />
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {filteredTasks.map((task) => (
+              <div
+                key={task.id}
+                className="border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <h3 className="text-xl font-semibold">{task.title}</h3>
+                <p>
+                  <strong>Description:</strong> {task.description}
+                </p>
+                <p>
+                  <strong>Priority:</strong> {task.priority_val}
+                </p>
+                <p>
+                  <strong>Status:</strong> {task.status}
+                </p>
+                <p>
+                  <strong>Due Date:</strong>{" "}
+                  {new Date(task.due_date).toLocaleString()}
+                </p>
+              </div>
+            ))}
           </div>
         </>
       )}
+      
     </div>
   );
 };
