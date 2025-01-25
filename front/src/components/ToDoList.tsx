@@ -1,34 +1,18 @@
 import React from "react";
-import { ITask } from "../types/todoTypes";
-import { Task } from "./Tasks";
+import { ITask } from "@/types/todoTypes";
+import TaskBax from "./TaskBox";
 
-interface taskInterface {
+interface TaskInterface {
   tasks: ITask[];
 }
-const ToDoList: React.FC<taskInterface> = ({ tasks }) => {
+
+const ToDoList: React.FC<TaskInterface> = ({ tasks }) => {
   return (
-    <div>
-      <div className="overflow-x-auto m-8 w-full">
-        <table className="table ">
-        {/* <thead>
-          <tr>
-            <th className="border border-gray-300 px-4 py-2 bg-gray-950 text-lg font-bold">
-              Heading 1
-            </th>
-            <th className="border border-gray-300 px-4 py-2  bg-gray-950 text-lg font-bold">
-              Heading 2
-            </th>
-          </tr>
-        </thead> */}
-          <tbody>
-            
-            {/* row 1 */}
-            {tasks.map((task) => (
-              <Task key={task.id} task={task} />
-              
-            ))}
-          </tbody>
-        </table>
+    <div className="pt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {tasks.map((task) => (
+          <TaskBax key={task.id} task={task} />
+        ))}
       </div>
     </div>
   );
