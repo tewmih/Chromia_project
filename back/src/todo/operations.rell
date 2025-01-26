@@ -1,12 +1,12 @@
 operation register_user(name) {
-    val account=register_account();
+    val account = register_account();
     // val account = create_account_with_auth(single_sig_auth_descriptor(pubkey, set(["A", "T"])));
     require(not name.empty(), "Name is required");
     create user ( name, account.id, account );
 }
 
 operation create_task(title: text, description: text, priority, due_date: integer) {
-    val account =auth.authenticate();
+    val account = auth.authenticate();
     val user = user @ { account.id } ( $ );
     require(not title.empty(), "title is required");
     require(not description.empty(), "Description is required");
@@ -36,7 +36,8 @@ operation update_task(title: text?, user, description: text?, priority?, id: byt
     }
 
     update task @ {
-        id
+        id,
+        .user.id == user.id
     } (
         .priority_val = updated_priority,
         .title = updated_title,
@@ -46,14 +47,22 @@ operation update_task(title: text?, user, description: text?, priority?, id: byt
     );
 }
 
-operation complete_task(id: byte_array, user) {
+operation complete_task(id: byte_array) {
+    val account = auth.authenticate();
+    val user = user @ { account.id } ( $ );
     require(op_context.is_signer(user.id), "only the owner completes the task");
-    update task @ { id } ( .status = is_completed.completed );
+    update task @ { id, .user.id == user.id } ( .status = is_completed.completed );
+}
+operation pend_task(id: byte_array) {
+    val account = auth.authenticate();
+    val user = user @ { account.id } ( $ );
+    require(op_context.is_signer(user.id), "only the owner completes the task");
+    update task @ { id, .user.id == user.id } ( .status = is_completed.pending );
 }
 
-
-operation delete_task(id: byte_array, user) {
+operation delete_task(id: byte_array) {
+    val account = auth.authenticate();
+    val user = user @ { account.id } ( $ );
     require(op_context.is_signer(user.id), "Only the owner can call this operation");
-    delete task @ { id };
+    delete task @ { id, .user.id == user.id };
 }
-

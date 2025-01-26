@@ -4,11 +4,11 @@ blockchains:
     moduleArgs:
       todo:
         dapp_account_signer: x"034F080D8184B69611AEA16B1CDA808DA54FB53D5199101A34D59FD529304BBE7D"
-      lib.ft4.core.accounts:
-        rate_limit:
-          max_points: 1000
-          recovery_time: 5000
-          points_at_account_creation: 2
+      # lib.ft4.core.accounts:
+      #   rate_limit:
+      #     max_points: 1000
+      #     recovery_time: 5000
+      #     points_at_account_creation: 2
       lib.ft4.core.auth:
         evm_signatures_authorized_operations:
           - register_user

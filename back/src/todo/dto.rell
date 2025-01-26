@@ -2,6 +2,7 @@ struct task_dto {
     id:byte_array;
     title: text;
     description:text;
-    status:text;
+    status:is_completed;
+    priority_val:priority;
     due_date:integer;
 }
