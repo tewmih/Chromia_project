@@ -7,6 +7,7 @@ import { SlRefresh } from "react-icons/sl";
 import { Modal } from "./Modal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTAppStore } from "@/store/stateStore";
 
 interface TaskProps {
   task: ITask;
@@ -19,23 +20,39 @@ function TaskBox({ task }: TaskProps) {
 
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
-  const [dueDate, setDueDate] = useState(
-    task.due_date ? new Date(task.due_date) : null
-  );
+  const [dueDate, setDueDate] =useState("");
   const [editPriority, setEditPriority] = useState(task.priority_val);
 
   const [status, setStatus] = useState(task.status);
 
+
+  const {session} = useTAppStore();
   const toggleStatus = () => {
     setStatus((prevStatus) =>
       prevStatus === "pending" ? "completed" : "pending"
     );
   };
 
-  const handleEditSubmit = () => {
-    setEditModalOpen(false);
+  const handleEditSubmit = async () => {
     console.log(editDescription + editPriority + editTitle + dueDate);
-    setDueDate(null);
+    if(!session) return;
+    try {
+      await session?.call<any>("update_task", {
+        task_id: task.id,
+        title: editTitle,
+        description: editDescription,
+        due_date: new Date(dueDate).getTime(),
+        priority_val: editPriority,
+      });
+      console.log("Task edited successfully");
+      
+    } catch (error) {
+      console.error("Failed to edit task", error);
+      
+    }
+
+    setEditModalOpen(false);
+    setDueDate("");
     setEditPriority("low");
     setEditDescription("");
     setEditTitle("");
@@ -86,7 +103,7 @@ function TaskBox({ task }: TaskProps) {
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Due Date:</span>
         <span className="text-sm text-gray-500">
-          {dueDate ? dueDate.toISOString().split("T")[0] : "No due date"}
+          {dueDate }
         </span>
       </div>
 
@@ -171,13 +188,9 @@ function TaskBox({ task }: TaskProps) {
               <input
                 type="date"
                 className="h-9 bg-gray-700 text-white px-2 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
-                value={dueDate ? dueDate.toISOString().split("T")[0] : ""}
-                onChange={(e) => {
-                  const selectedDate = e.target.value
-                    ? new Date(e.target.value)
-                    : null;
-                  setDueDate(selectedDate);
-                }}
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)
+                }
               />
             </div>
 

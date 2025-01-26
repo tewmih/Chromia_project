@@ -15,14 +15,17 @@ operation create_task(title: text, description: text, priority, due_date: intege
     create task ( title, user, description, .priority_val = priority, .due_date = date );
 }
 
-operation update_task(title: text?, user, description: text?, priority?, id: byte_array, date: integer?) {
+operation update_task(task_id: byte_array,title: text?, description: text?, priority?,  date: integer?) {
 //    title= title==null? task @{.id}($.title):title;
+ val account = auth.authenticate();
+    val user = user @ { account.id } ( $ );
+
     require(op_context.is_signer(user.id), "Only the owner can call this operation");
-    var updated_title = task @ { id } ( $.title );
+    var updated_title = task @ { .id==task_id } ( $.title );
     if (title != null) {
         updated_title = title;
     }
-    var updated_priority = task @ { id } ( $.priority_val );
+    var updated_priority = task @ { .id==task_id } ( $.priority_val );
     if (priority != null) {
         updated_priority = priority;
     }
@@ -36,12 +39,12 @@ operation update_task(title: text?, user, description: text?, priority?, id: byt
     }
 
     update task @ {
-        id,
+        .id==task_id,
         .user.id == user.id
     } (
-        .priority_val = updated_priority,
         .title = updated_title,
         .description = updated_description,
+        .priority_val = updated_priority,
         .due_date = updated_due_date,
         .updated_at = last_known_time()
     );
