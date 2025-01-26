@@ -1,4 +1,3 @@
-"use client";
 import ToDoList from "@/components/ToDoList";
 
 const Page = ()=> {
