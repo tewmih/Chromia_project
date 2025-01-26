@@ -150,10 +150,7 @@ query get_low_priority_tasks(pointer: integer, n_tasks: integer): (pointer: inte
     );
 }
 
-query upcoming_tasks(user) {
-    // require(op_context.is_signer(user.id), "only the owner can see the upcoming tasks");
-    return task @ { .due_date > last_known_time() } ( $.to_struct() );
-}
+
 
 query get_tasks_by_due_date(
     status: text,
