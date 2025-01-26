@@ -1,6 +1,6 @@
 entity user {
-    name;
-    key id: byte_array= op_context.transaction.tx_rid;
+    mutable name;
+    key id: byte_array;
     account;
 }
 
@@ -11,11 +11,11 @@ enum priority {
 }
 
 entity task {
-    mutable title: text;
+    mutable title: text;//front
     key id: byte_array= op_context.transaction.tx_rid;
-    index user;//key..
+    index user;//key..//front
     // mutable is_completed:boolean=false;
-    mutable description: text;
+    mutable description: text;//forntend
     mutable due_date: timestamp = last_known_time()*10;
     mutable priority_val: priority;
     created_at: timestamp = last_known_time();

@@ -1,5 +1,3 @@
-"use client"
-
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,6 +11,7 @@ export default function Home() {
           alt="Chromia Blockchain"
           fill
           className="object-cover"
+          priority
         />
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-70"></div>
@@ -50,9 +49,8 @@ export default function Home() {
         </div>
 
         {/* Call to Action */}
-        {/* Navigation Button */}
         <Link href="/" passHref>
-          <button className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition">
+          <button className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition" aria-label="Get Started with the To-Do dApp">
             Get Started
           </button>
         </Link>

@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { addTodo } from "@/lib/api";
+// import { addTodo } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
+import { useSessionContext } from "@/components/contextProvider";
 
 interface AddModalContentProps {
   setModalOpen: (open: boolean) => void;
@@ -16,8 +17,31 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
   const [priority, setPriority] = useState<"high" | "medium" | "low" | "">("");
   const [dueDate, setDueDate] = useState("");
 
-  const handleSubmit =  (e: React.FormEvent<HTMLFormElement>) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const session = useSessionContext();
+  if(!session){
+    alert("no session in addModalContent ::::  " + session);
+  }
+
+  const handleSubmit =  async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+        // Step 3: Handle form submission
+        if (!session) return
+        try {
+          if (title.trim() !== '' || description.trim()!== ''||priority.trim() !== ''|| dueDate!== undefined) {
+            setIsLoading(true);
+            // Step 4: Content submission
+            await session.call({
+              name: "create_task",
+              args: [title, description, priority, dueDate],
+            })}
+            alert("task created successfully")
+            // router.push('/');
+          }catch (e) {
+            console.error(e);
+            setIsLoading(false);
+          }
 
     // await addTodo({
     //   id: uuidv4(),
@@ -124,4 +148,4 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
   );
 };
 
-export default AddModalContent;
+export default AddModalContent

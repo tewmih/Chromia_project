@@ -11,22 +11,73 @@ query get_transaction() {
 }
 
 //task related functions
-
+//1
 query get_all_task() {
     return task @* { } ( $.to_struct() );
 }
-query get_pending_tasks(user) {
-  require(is_user(user), "Not the owner of the task");
-  return task @* { .status==is_completed.pending}(
-    @sort_desc @omit .created_at ,
-    $.to_struct()
-    );
 
+//2
+query get_pending_tasks() {
+    val acccount = auth.authenticate();
+    val user = user @ { .id == acccount.id } ( $ );
+    require(is_user(user), "Not the owner of the task");
+    return task @* { .status == is_completed.pending } (
+        @sort_desc @omit .created_at,
+        $.to_struct()
+    );
 }
+
+// query get_tasks_by_status(
+//     status: text,
+//     pointer: integer,
+//     n_tasks: integer
+// ): (pointer: integer, tasks: list<task_dto>) {
+//     val tasks = task @* { .status == status } (
+//         @sort_desc @omit task.rowid,
+//         task_dto (
+//             task.id,
+//             task.title,
+//             task.description,
+//             task.status,
+//             task.due_date,
+//         )
+//     ) offset pointer limit n_tasks;
+//     return (
+//         pointer = pointer + tasks.size(),
+//         tasks = tasks
+//     );
+// }
 query get_completed_tasks(user) {
     require(is_user(user), "only the owner of the task is allowed to see tasks");
 
-    return task @* { .status==is_completed.completed}(
+    return task @* { .status == is_completed.completed } (
         @sort_desc .created_at,
-        $.to_struct());
+        $.to_struct()
+    );
+}
+
+query high_priority() {
+    return task @* { .priority_val == priority.high } (
+        @sort_desc .created_at,
+        $.to_struct()
+    );
+}
+
+query medium_priority() {
+    return task @* { .priority_val == priority.medium } (
+        @sort_desc .created_at,
+        $.to_struct()
+    );
+}
+
+query low_priority() {
+    return task @* { .priority_val == priority.low } (
+        @sort_desc .created_at,
+        $.to_struct()
+    );
+}
+
+query upcoming_tasks(user) {
+    // require(op_context.is_signer(user.id), "only the owner can see the upcoming tasks");
+    return task @ { .due_date > last_known_time() } ( $.to_struct() );
 }

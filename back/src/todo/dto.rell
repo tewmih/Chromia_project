@@ -1,0 +1,7 @@
+struct task_dto {
+    id:byte_array;
+    title: text;
+    description:text;
+    status:text;
+    due_date:integer;
+}

@@ -10,12 +10,15 @@
     "json-server": "json-server --watch data/Todos.json --port 3001"
   },
   "dependencies": {
+    "@chromia/ft4": "^1.0.1",
     "daisyui": "^4.12.23",
     "next": "15.1.5",
+    "postchain-client": "^1.20.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
-    "uuid": "^11.0.5"
+    "uuid": "^11.0.5",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

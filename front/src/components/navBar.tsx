@@ -30,7 +30,6 @@ export default function Navbar() {
                 To-Do App
               </Link>
             </div>
-
             {/* Right-Side Buttons (Only visible on larger screens) */}
             <div className="hidden md:flex items-center space-x-4">
               <AddTask />
@@ -48,12 +47,37 @@ export default function Navbar() {
                 </Link>
               ))}
             </div>
-
             {/* Connect Wallet Button - Always Visible */}
-            <button className="flex items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-2 py-1 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105 mr-2">
+            <button
+              className="flex items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-2 py-1 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105 mr-2"
+              onClick={async () => {
+                if (typeof window.ethereum === "undefined") {
+                  alert(
+                    "MetaMask is not installed. Please install MetaMask and try again."
+                  );
+                  return;
+                }
+
+                try {
+                  // Prompt MetaMask to connect
+                  const accounts = await window.ethereum.request({
+                    method: "eth_requestAccounts",
+                  });
+                  if (accounts.length > 0) {
+                    console.log(
+                      "Connected to MetaMask with account:",
+                      accounts[0]
+                    );
+                  } else {
+                    console.log("No accounts found.");
+                  }
+                } catch (error) {
+                  console.error("Error connecting to MetaMask:", error);
+                }
+              }}
+            >
               Connect Wallet
             </button>
-
             {/* Mobile Menu Button */}
             <button
               className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"

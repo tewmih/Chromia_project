@@ -1,0 +1,31 @@
+add,update{
+    title,
+    description,
+    priority,
+    duedate
+}
+
+connectWallet{
+
+}
+
+delete{
+
+}
+
+completeupdate{
+
+}
+complatefiler{
+
+}
+
+disconnectWallet{//i dont know
+
+}
+upcoming{
+    filter by duedate
+}
+filters{
+    
+}

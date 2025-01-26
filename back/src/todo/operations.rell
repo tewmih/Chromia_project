@@ -1,12 +1,12 @@
-operation create_user(name, pubkey) {
-    // val account=register_account();
-    val account = create_account_with_auth(single_sig_auth_descriptor(pubkey, set(["A", "T"])));
+operation register_user(name) {
+    val account=register_account();
+    // val account = create_account_with_auth(single_sig_auth_descriptor(pubkey, set(["A", "T"])));
     require(not name.empty(), "Name is required");
     create user ( name, account.id, account );
 }
 
-operation create_task(account, title: text, description: text, priority, due_date: integer) {
-    // val account =auth.authenticate();
+operation create_task(title: text, description: text, priority, due_date: integer) {
+    val account =auth.authenticate();
     val user = user @ { account.id } ( $ );
     require(not title.empty(), "title is required");
     require(not description.empty(), "Description is required");
@@ -50,6 +50,7 @@ operation complete_task(id: byte_array, user) {
     require(op_context.is_signer(user.id), "only the owner completes the task");
     update task @ { id } ( .status = is_completed.completed );
 }
+
 
 operation delete_task(id: byte_array, user) {
     require(op_context.is_signer(user.id), "Only the owner can call this operation");

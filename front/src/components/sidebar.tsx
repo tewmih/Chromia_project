@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LiaPlusCircleSolid } from "react-icons/lia";
@@ -12,18 +12,33 @@ const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false); // Fix for hydration errors
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriorty] = useState("");
+  const [priority, setPriority] = useState("");
+
+  // Ensure the component only renders on the client
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
-  const handleSubmit = () => {};
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log({ name, description, priority });
+    setModalOpen(false);
+  };
+
+  if (!hydrated) {
+    return null; // Prevent rendering on the server
+  }
 
   return (
     <aside
       className={`${
-        isCollapsed ? "w-20" : "w-26"
-      } !bg-fuchsia-950  p-4 border-r border-gray-700 text-gray-300 transition-all duration-300 mt-16`}
+        isCollapsed ? "w-20" : "w-64"
+      } bg-fuchsia-950 h-screen p-4 border-r border-gray-700 text-gray-300 transition-all duration-300`}
     >
       {/* Toggle Button */}
       <button
@@ -50,12 +65,13 @@ const Sidebar: React.FC = () => {
         </li>
         <li>
           <div
-            className={`flex items-center gap-3 px-4 py-2 rounded-md  hover:cursor-pointer hover:bg-gray-800 hover:text-white`}
+            className={`flex items-center gap-3 px-4 py-2 rounded-md cursor-pointer hover:bg-gray-800 hover:text-white`}
             onClick={() => setModalOpen(true)}
           >
             <LiaPlusCircleSolid size={20} />
             <span className={isCollapsed ? "hidden" : ""}>Add Task</span>
           </div>
+          {/* Modal for adding a task */}
           <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
             <form
               onSubmit={handleSubmit}
@@ -69,6 +85,7 @@ const Sidebar: React.FC = () => {
                   Task Name
                 </label>
                 <input
+                  id="name"
                   className="h-10 bg-gray-700 w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   type="text"
                   placeholder="Enter task name"
@@ -82,6 +99,7 @@ const Sidebar: React.FC = () => {
                   Description
                 </label>
                 <textarea
+                  id="description"
                   className="h-20 bg-gray-700 w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   placeholder="Enter task description"
                   value={description}
@@ -94,17 +112,15 @@ const Sidebar: React.FC = () => {
                   Priority
                 </label>
                 <select
-                  className="h-10 bg-gray-700 w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   id="priority"
+                  className="h-10 bg-gray-700 w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={priority}
-                  onChange={(e) => setPriorty(e.target.value)}
+                  onChange={(e) => setPriority(e.target.value)}
                 >
                   <option value="" disabled>
                     Select priority
                   </option>
-                  <option value="high" className="p-2">
-                    High
-                  </option>
+                  <option value="high">High</option>
                   <option value="medium">Medium</option>
                   <option value="low">Low</option>
                 </select>
@@ -112,7 +128,7 @@ const Sidebar: React.FC = () => {
 
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-blue-600 hover:to-purp;e-500 transition-transform transform hover:scale-105"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-blue-600 hover:to-purple-500 transition-transform transform hover:scale-105"
               >
                 Submit
               </button>
