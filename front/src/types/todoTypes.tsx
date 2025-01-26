@@ -12,9 +12,7 @@ export interface ITask {
   description: string; // Description of the task
   priority_val: "high" | "medium" | "low"; // Priority of the task
   status: "pending" | "completed"; // Status of the task
-  due_date: string; // Due date in ISO format
-  created_at: string; // Timestamp when the task was created
-  updated_at?: string; // Optional timestamp for the last update
+  due_date: string; // Due date in ISO format// Optional timestamp for the last update
 }
 
 

@@ -3,6 +3,8 @@ import ToDoList from "@/components/ToDoList";
 import { GetAlltodos } from "@/lib/api";
 import { ITask } from "@/types/todoTypes";
 import React, { useState, useEffect } from "react";
+// import { useQuery } from "@/hooks/hooks";
+// import { useSessionContext } from "@/components/contextProvider";
 
 const Page = () => {
   const [isFilterOpened, setFilterOpened] = useState(false);
@@ -11,16 +13,31 @@ const Page = () => {
   const [status, setStatus] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
 
+  // const { result:all_tasks, reload:all_task_reload } = useQuery<any>("get_all_task");
+
+  // const session = useSessionContext();
+  // const accountId = session?.account.id;
+  
   useEffect(() => {
     const fetchTasks = async () => {
-      try {
-        const fetchedTasks = await GetAlltodos();
-        setTasks(fetchedTasks);
-      } catch (err) {
-        console.error("Failed to fetch tasks", err);
-      }
-    };
-    fetchTasks();
+        try {
+            const fetchedTasks = await GetAlltodos();
+            setTasks(fetchedTasks);
+          } catch (err) {
+              console.error("Failed to fetch tasks", err);
+            }
+          };
+          fetchTasks();
+          
+    //       const fetchTasks = async () => {
+        
+        
+    //     // setTasks(all_tasks);
+
+
+    //  }
+    //  fetchTasks();
+
   }, []);
 
   // Filter and sort tasks
