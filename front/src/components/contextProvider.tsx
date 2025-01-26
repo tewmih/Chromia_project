@@ -63,12 +63,5 @@ export function ContextProvider({ children }: { children: ReactNode }) {
 }
 
 export function useSessionContext() {
-  const session = useContext(ChromiaContext);
-  console.log(
-    "session started successfully+++++++" + useSessionContext() + "  " + session
-  );
-  // if (!session) {
-  //   throw new Error("useSessionContext must be used within a ContextProvider");
-  // }
-  return session;
+  return useContext(ChromiaContext);
 }

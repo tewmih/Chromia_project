@@ -8,6 +8,7 @@ import { Modal } from "./Modal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTAppStore } from "@/store/stateStore";
+import { toast } from "react-toastify";
 
 interface TaskProps {
   task: ITask;
@@ -20,45 +21,76 @@ function TaskBox({ task }: TaskProps) {
 
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
-  const [dueDate, setDueDate] =useState("");
-  const [editPriority, setEditPriority] = useState(task.priority_val);
+  const [dueDate, setDueDate] = useState("");
+  const [editPriority, setEditPriority] = useState<"high" | "medium" | "low">(
+    task.priority_val
+  );
 
   const [status, setStatus] = useState(task.status);
 
-
-  const {session} = useTAppStore();
+  const { session } = useTAppStore();
   const toggleStatus = () => {
     setStatus((prevStatus) =>
       prevStatus === "pending" ? "completed" : "pending"
     );
   };
 
-  const handleEditSubmit = async () => {
-    console.log(editDescription + editPriority + editTitle + dueDate);
-    if(!session) return;
-    try {
-      await session?.call<any>("update_task", {
-        task_id: task.id,
-        title: editTitle,
-        description: editDescription,
-        due_date: new Date(dueDate).getTime(),
-        priority_val: editPriority,
-      });
-      console.log("Task edited successfully");
-      
-    } catch (error) {
-      console.error("Failed to edit task", error);
-      
-    }
-
-    setEditModalOpen(false);
-    setDueDate("");
-    setEditPriority("low");
-    setEditDescription("");
-    setEditTitle("");
-    router.refresh();
+  const priorityToNumber = {
+    high: 0,
+    medium: 1,
+    low: 2,
   };
 
+  const handleEditSubmit = async () => {
+    if (!session) return;
+    try {
+      console.log(
+        "Editing task with ID:",
+        task.id,
+        editTitle,
+        editDescription,
+        editPriority,
+        new Date(dueDate).getTime()
+      );
+      await session?.call<any>({
+        name: "update_task",
+        args: [
+          task.id,
+          editTitle,
+          editDescription,
+          priorityToNumber[editPriority],
+          new Date(dueDate).getTime(),
+        ],
+      });
+      console.log("Task edited successfully");
+      setEditModalOpen(false);
+      setDueDate("");
+      setEditPriority("low");
+      setEditDescription("");
+      setEditTitle("");
+      toast.success("Task edited successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to edit task", error);
+      toast.error("Failed to edit task");
+    }
+  };
+  const handleDeleteTask = async () => {
+    if (!session) return;
+    try {
+      await session?.call<any>({
+        name: "delete_task",
+        args: [task.id],
+      });
+      console.log("Task deleted successfully");
+      setDeleteModalOpen(false);
+      toast.success("Task deleted successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to delete task", error);
+      toast.error("Failed to delete task");
+    }
+  };
   return (
     <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-64">
       {/* Task Title */}
@@ -76,8 +108,8 @@ function TaskBox({ task }: TaskProps) {
 
       {/* Status */}
       <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-gray-600 mr-24">status:</span>
-        
+        <span className="text-sm font-medium text-gray-600 mr-24">status:</span>
+
         <input
           type="checkbox"
           checked={status === "completed"}
@@ -94,7 +126,9 @@ function TaskBox({ task }: TaskProps) {
         ) : (
           <>
             <SlRefresh size={20} className="text-red-600" />
-            <span className="text-xs font-semibold text-red-600">Pending...</span>
+            <span className="text-xs font-semibold text-red-600">
+              Pending...
+            </span>
           </>
         )}
       </div>
@@ -102,9 +136,7 @@ function TaskBox({ task }: TaskProps) {
       {/* Due Date */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Due Date:</span>
-        <span className="text-sm text-gray-500">
-          {dueDate }
-        </span>
+        <span className="text-sm text-gray-500">{dueDate}</span>
       </div>
 
       {/* Dropdown for Description */}
@@ -189,8 +221,7 @@ function TaskBox({ task }: TaskProps) {
                 type="date"
                 className="h-9 bg-gray-700 text-white px-2 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
                 value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)
-                }
+                onChange={(e) => setDueDate(e.target.value)}
               />
             </div>
 
@@ -228,8 +259,7 @@ function TaskBox({ task }: TaskProps) {
               <button
                 className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                 onClick={() => {
-                  console.log(task.id + editDescription);
-                  setDeleteModalOpen(false);
+                  handleDeleteTask(task.id);
                 }}
               >
                 Delete
