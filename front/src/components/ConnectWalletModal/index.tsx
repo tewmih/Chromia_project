@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import {
   createKeyStoreInteractor,
-  createSessionStorageLoginKeyStore,
+  // createSessionStorageLoginKeyStore,
   createSingleSigAuthDescriptorRegistration,
   createWeb3ProviderEvmKeyStore,
   hours,

@@ -12,7 +12,7 @@ query get_transaction() {
 
 //task related functions
 //1
-query get_all_tasks(user_id:byte_array,pointer:integer,task_number:integer):(pointer: integer, tasks: list<task_dto>) {
+query get_all_tasks(user_id: byte_array, pointer: integer, task_number: integer): (pointer: integer, tasks: list<task_dto>) {
     val tasks = task @* { .user.id == user_id } (
         @sort_desc @omit .rowid,
         task_dto (
@@ -22,7 +22,6 @@ query get_all_tasks(user_id:byte_array,pointer:integer,task_number:integer):(poi
             task.status,
             task.due_date,
             task.priority_val
-
         )
     ) offset pointer limit task_number;
     return (
@@ -67,6 +66,7 @@ query get_completed_tasks(
         tasks = tasks
     );
 }
+
 query get_pending_tasks(
     status: is_completed,
     pointer: integer,
@@ -88,6 +88,7 @@ query get_pending_tasks(
         tasks = tasks
     );
 }
+
 // query get_completed_tasks(user) {
 //     require(is_user(user), "only the owner of the task is allowed to see tasks");
 
@@ -97,31 +98,60 @@ query get_pending_tasks(
 //     );
 // }
 
-query high_priority() {
-    return task @* { .priority_val == priority.high } (
-        @sort_desc .created_at,
-        $.to_struct()
+query get_high_priority_tasks(pointer: integer, n_tasks: integer): (pointer: integer, tasks: list<task_dto>) {
+    val tasks = task @* { .priority_val == priority.high, } (
+        @sort_desc @omit task.rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val
+        )
+    ) offset pointer limit n_tasks;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
+    );
+}
+query get_medium_priority_tasks(pointer: integer, n_tasks: integer): (pointer: integer, tasks: list<task_dto>) {
+    val tasks = task @* { .priority_val == priority.high, } (
+        @sort_desc @omit task.rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val
+        )
+    ) offset pointer limit n_tasks;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
+    );
+}
+query get_low_priority_tasks(pointer: integer, n_tasks: integer): (pointer: integer, tasks: list<task_dto>) {
+    val tasks = task @* { .priority_val == priority.high, } (
+        @sort_desc @omit task.rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val
+        )
+    ) offset pointer limit n_tasks;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
     );
 }
 
-query medium_priority() {
-    return task @* { .priority_val == priority.medium } (
-        @sort_desc .created_at,
-        $.to_struct()
-    );
-}
 
-query low_priority() {
-    return task @* { .priority_val == priority.low } (
-        @sort_desc .created_at,
-        $.to_struct()
-    );
-}
 
-query upcoming_tasks(user) {
-    // require(op_context.is_signer(user.id), "only the owner can see the upcoming tasks");
-    return task @ { .due_date > last_known_time() } ( $.to_struct() );
-}
 query get_tasks_by_due_date(
     status: text,
     pointer: integer,
@@ -136,8 +166,6 @@ query get_tasks_by_due_date(
             task.status,
             task.due_date,
             task.priority_val,
-
-
         )
     ) offset pointer limit n_tasks;
     return (
