@@ -8,6 +8,7 @@ import { Modal } from "./Modal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTAppStore } from "@/store/stateStore";
+import { toast } from "react-toastify";
 
 interface TaskProps {
   task: ITask;
@@ -21,12 +22,15 @@ function TaskBox({ task }: TaskProps) {
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
   const [dueDate, setDueDate] = useState("");
-  const [editPriority, setEditPriority] = useState(task.priority_val);
+  const [editPriority, setEditPriority] = useState<"high" | "medium" | "low">(
+    task.priority_val
+  );
 
   const [status, setStatus] = useState(task.status);
   const [CompletedTasks, setCompletedTasks] = useState("");
 
   const { session } = useTAppStore();
+
   useEffect(() => {
     const fetchCompletedTasks = async () => {
       if (!session) {
@@ -72,27 +76,55 @@ function TaskBox({ task }: TaskProps) {
   };
 
   const handleEditSubmit = async () => {
-    console.log(editDescription + editPriority + editTitle + dueDate);
     if (!session) return;
     try {
-      await session?.call<any>("update_task", {
-        task_id: task.id,
-        title: editTitle,
-        description: editDescription,
-        due_date: new Date(dueDate).getTime(),
-        priority_val: editPriority,
+      console.log(
+        "Editing task with ID:",
+        task.id,
+        editTitle,
+        editDescription,
+        editPriority,
+        new Date(dueDate).getTime()
+      );
+      await session?.call<any>({
+        name: "update_task",
+        args: [
+          task.id,
+          editTitle,
+          editDescription,
+          editPriority,
+          new Date(dueDate).getTime(),
+        ],
       });
       console.log("Task edited successfully");
+      setEditModalOpen(false);
+      setDueDate("");
+      setEditPriority("low");
+      setEditDescription("");
+      setEditTitle("");
+      toast.success("Task edited successfully");
+      router.refresh();
     } catch (error) {
       console.error("Failed to edit task", error);
+      toast.error("Failed to edit task");
     }
+  };
 
-    setEditModalOpen(false);
-    setDueDate("");
-    setEditPriority("low");
-    setEditDescription("");
-    setEditTitle("");
-    router.refresh();
+  const handleDeleteTask = async () => {
+    if (!session) return;
+    try {
+      await session?.call<any>({
+        name: "delete_task",
+        args: [task.id],
+      });
+      console.log("Task deleted successfully");
+      setDeleteModalOpen(false);
+      toast.success("Task deleted successfully");
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to delete task", error);
+      toast.error("Failed to delete task");
+    }
   };
 
   return (
@@ -108,9 +140,8 @@ function TaskBox({ task }: TaskProps) {
       </div>
 
       {/* Status */}
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-600">status:</span>
-
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-600 mr-24">Status:</span>
         <input
           type="checkbox"
           checked={status === "completed"}
@@ -121,7 +152,7 @@ function TaskBox({ task }: TaskProps) {
           <>
             <span className="text-xs font-semibold text-green-600">
               Completed
-            </span>{" "}
+            </span>
             <IoCheckmarkDoneSharp size={20} className="text-green-600" />
           </>
         ) : (
@@ -159,6 +190,7 @@ function TaskBox({ task }: TaskProps) {
         />
 
         <Modal modalOpen={editModalOpen} setModalOpen={setEditModalOpen}>
+          {/* Edit Modal */}
           <form
             onSubmit={handleEditSubmit}
             method="dialog"
@@ -204,9 +236,6 @@ function TaskBox({ task }: TaskProps) {
                   setEditPriority(e.target.value as "high" | "medium" | "low")
                 }
               >
-                <option value="" disabled>
-                  Select priority
-                </option>
                 <option value="high">High</option>
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
@@ -244,6 +273,15 @@ function TaskBox({ task }: TaskProps) {
             </div>
           </form>
         </Modal>
+
+        <FaRegTrashAlt
+          size={17}
+          color="red"
+          cursor="pointer"
+          onClick={() => setDeleteModalOpen(true)}
+          title="delete task"
+        />
+
         <Modal modalOpen={deleteModalOpen} setModalOpen={setDeleteModalOpen}>
           <div className="flex flex-col gap-6 bg-gray-800 p-6 rounded-xl shadow-lg text-center">
             <h3 className="font-bold text-xl text-white">Confirm Delete</h3>
@@ -260,8 +298,7 @@ function TaskBox({ task }: TaskProps) {
               <button
                 className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                 onClick={() => {
-                  console.log(task.id + editDescription);
-                  setDeleteModalOpen(false);
+                  handleDeleteTask();
                 }}
               >
                 Delete
@@ -269,14 +306,6 @@ function TaskBox({ task }: TaskProps) {
             </div>
           </div>
         </Modal>
-
-        <FaRegTrashAlt
-          size={17}
-          color="red"
-          cursor="pointer"
-          onClick={() => setDeleteModalOpen(true)}
-          title="delete task"
-        />
       </div>
     </div>
   );

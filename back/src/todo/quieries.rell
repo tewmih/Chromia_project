@@ -46,11 +46,11 @@ query get_single_task_by_id(user_id: byte_array, task_id: byte_array): task {
 // }
 
 query get_completed_tasks(
-    status: is_completed,
+    user_id:byte_array,
     pointer: integer,
     n_tasks: integer
 ): (pointer: integer, tasks: list<task_dto>) {
-    val tasks = task @* { .status == is_completed.completed } (
+    val tasks = task @* { .status == is_completed.completed ,.user.id==user_id} (
         @sort_desc @omit task.rowid,
         task_dto (
             task.id,

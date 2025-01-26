@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 // import { v4 as uuidv4 } from "uuid";
 import { useTAppStore } from "@/store/stateStore";
+import { toast } from "react-toastify";
 
 interface AddModalContentProps {
   setModalOpen: (open: boolean) => void;
@@ -54,20 +55,14 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
       }
       console.log("task created successfully");
       router.push("/home");
+      setIsLoading(false);
+      setModalOpen(false);
+      toast.success("Task created successfully");
     } catch (e) {
       console.error(e);
       setIsLoading(false);
+      toast.error("Error creating task");
     }
-
-    // await addTodo({
-    //   id: uuidv4(),
-    //   title,
-    //   description,
-    //   priority_val: priority || "low",
-    //   due_date: dueDate,
-    //   status: "pending", // or any default status
-    //   created_at: new Date().toISOString(),
-    // });
     console.log(
       "the data you entered is: ",
       title,
