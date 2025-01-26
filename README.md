@@ -100,6 +100,10 @@ git clone https://github.com/tewmih/Chromia_project
 ### Application Demo
 
 
+**Landing page**
+![image](https://github.com/user-attachments/assets/33cd9246-8723-470d-80df-3b25bd2cffa0)
+
+
 
 
 **Add Task**
