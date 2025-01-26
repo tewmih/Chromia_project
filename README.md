@@ -104,6 +104,11 @@ git clone https://github.com/tewmih/Chromia_project
 ![image](https://github.com/user-attachments/assets/33cd9246-8723-470d-80df-3b25bd2cffa0)
 
 
+**select wallet**
+![image](https://github.com/user-attachments/assets/27b24da3-a715-4a92-b200-802d2e0db8a6)
+
+**authentication**
+![Screenshot from 2025-01-27 00-44-11](https://github.com/user-attachments/assets/c6ec4a3f-71d8-467e-a19c-d7d15dbb6c63)
 
 
 **Add Task**
