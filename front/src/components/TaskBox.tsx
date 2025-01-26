@@ -34,7 +34,7 @@ function TaskBox({ task }: TaskProps) {
 
   const handleEditSubmit = () => {
     setEditModalOpen(false);
-    alert(editDescription + editPriority + editTitle + dueDate);
+    console.log(editDescription + editPriority + editTitle + dueDate);
     setDueDate(null);
     setEditPriority("low");
     setEditDescription("");
@@ -215,7 +215,7 @@ function TaskBox({ task }: TaskProps) {
               <button
                 className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                 onClick={() => {
-                  alert(task.id + editDescription);
+                  console.log(task.id + editDescription);
                   setDeleteModalOpen(false);
                 }}
               >

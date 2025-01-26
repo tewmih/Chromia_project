@@ -1,4 +1,7 @@
+
+ 'use client';
 // Create a custom hook for queries
+
 import { useSessionContext } from "@/components/contextProvider";
 import { useCallback, useEffect, useState } from "react";
 import { RawGtv, DictPair } from "postchain-client";

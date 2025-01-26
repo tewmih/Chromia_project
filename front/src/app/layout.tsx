@@ -1,10 +1,11 @@
-"use client"; 
+"use client";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navBar";
-import Footer from "@/components/Footer";
-import Sidebar from "@/components/sidebar";
-import { ContextProvider } from "@/components/contextProvider";
+import React, { useEffect, useState } from "react";
+import DefaultComponent from "./DefaultWrapper";
+import { useTAppStore } from "@/store/stateStore";
+import { useRouter } from "next/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,17 +20,38 @@ const geistMono = Geist_Mono({
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const [bodyClassName, setBodyClassName] = React.useState("");
+  const { setSession } = useTAppStore();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const router = useRouter();
+  useEffect(() => {
+    setBodyClassName(`${geistSans.variable} ${geistMono.variable} antialiased`);
+  }, []);
+
+  useEffect(() => {
+    // Check if window is refreshed
+    const handleBeforeUnload = () => {
+      setSession(undefined);
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    router.push("/");
+    // Use system or user preference for dark mode
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    setIsDarkMode(prefersDark);
+
+    // Cleanup listener
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ContextProvider>
-          <Navbar />
-          <div className="flex">
-            <Sidebar />
-            <main className="flex-1 min-h-screen p-6 pt-20">{children}</main>
-          </div>
-          <Footer />
-        </ContextProvider>
+      <body className={bodyClassName}>
+        <DefaultComponent>{children}</DefaultComponent>
       </body>
     </html>
   );

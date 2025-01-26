@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 import {
   createKeyStoreInteractor,
-  // createSessionStorageLoginKeyStore,
   createSingleSigAuthDescriptorRegistration,
   createWeb3ProviderEvmKeyStore,
   hours,
@@ -11,7 +10,6 @@ import {
   registrationStrategy,
   ttlLoginRule,
 } from "@chromia/ft4";
-import {IClient} from "postchain-client"
 import { getRandomUserName } from "@/utility/user";
 import { CustomizedModalProps } from "./types";
 import { useTAppStore } from "@/store/stateStore";
@@ -26,7 +24,7 @@ export default function CustomizedModal({
   onClose,
   onLogin,
 }: CustomizedModalProps) {
-  const { client, setSession, session } = useTAppStore();
+  const { client, setSession, setLogout } = useTAppStore();
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   if (!isOpen) return null;
 
@@ -59,14 +57,16 @@ export default function CustomizedModal({
         },
         // loginKeyStore: createSessionStorageLoginKeyStore(),
       });
+      console.log("Session initialized",session);
       setSession(session);
+      setLogout(logout);
     } else {
       // 5. Create a new account by signing a message using metamask
       const authDescriptor = createSingleSigAuthDescriptorRegistration(
         ["A", "T"],
         evmKeyStore.id
       );
-      const { session } = await registerAccount(
+      const { session,logout } = await registerAccount(
         client,
         evmKeyStore,
         registrationStrategy.open(authDescriptor, {
@@ -76,11 +76,12 @@ export default function CustomizedModal({
           },
         }),
         {
-          name: "create_user",
+          name: "register_user",
           args: [getRandomUserName()],
         }
       );
       setSession(session);
+      setLogout(logout);
     }
     console.log("Session initialized");
   };

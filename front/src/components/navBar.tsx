@@ -4,12 +4,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import AddTask from "./AddTask";
+import CustomizedModal from "./ConnectWalletModal";
+import { useTAppStore } from "@/store/stateStore";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { session, setSession, logout } = useTAppStore();
   const [isMounted, setIsMounted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleLogin = () => {
+    setIsModalOpen(false);
+  };
 
+  const handleLogout = async () => {
+    setSession(undefined);
+    await logout();
+  };
   // Prevents hydration errors
   useEffect(() => {
     setIsMounted(true);
@@ -48,36 +59,21 @@ export default function Navbar() {
               ))}
             </div>
             {/* Connect Wallet Button - Always Visible */}
-            <button
-              className="flex items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-2 py-1 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105 mr-2"
-              onClick={async () => {
-                if (typeof window.ethereum === "undefined") {
-                  alert(
-                    "MetaMask is not installed. Please install MetaMask and try again."
-                  );
-                  return;
-                }
-
-                try {
-                  // Prompt MetaMask to connect
-                  const accounts = await window.ethereum.request({
-                    method: "eth_requestAccounts",
-                  });
-                  if (accounts.length > 0) {
-                    console.log(
-                      "Connected to MetaMask with account:",
-                      accounts[0]
-                    );
-                  } else {
-                    console.log("No accounts found.");
-                  }
-                } catch (error) {
-                  console.error("Error connecting to MetaMask:", error);
-                }
-              }}
-            >
-              Connect Wallet
-            </button>
+            {!session ? (
+              <button
+                className="flex items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-2 py-1 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105 mr-2"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Connect Wallet
+              </button>
+            ) : (
+              <button
+                onClick={() => handleLogout()}
+                className="flex items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-2 py-1 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-105 mr-2"
+              >
+                Disconnect Wallet
+              </button>
+            )}
             {/* Mobile Menu Button */}
             <button
               className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -128,6 +124,11 @@ export default function Navbar() {
             </ul>
           </div>
         )}
+        <CustomizedModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onLogin={handleLogin}
+        />
       </div>
     </>
   );

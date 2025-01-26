@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 // import { addTodo } from "@/lib/api";
 import { useRouter } from "next/navigation";
 // import { v4 as uuidv4 } from "uuid";
-import { useSessionContext } from "@/components/contextProvider";
+import { useTAppStore } from "@/store/stateStore";
 
 interface AddModalContentProps {
   setModalOpen: (open: boolean) => void;
@@ -18,30 +18,46 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
   const [dueDate, setDueDate] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-  const session = useSessionContext();
-  if(!session){
-    alert("no session in addModalContent ::::  " + session);
+  const { session } = useTAppStore();
+  if (!session) {
+    console.log("no session in addModalContent ::::  " + session);
   }
 
-  const handleSubmit =  async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-        // Step 3: Handle form submission
-        if (!session) return
-        try {
-          if (title.trim() !== '' || description.trim()!== ''||priority.trim() !== ''|| dueDate!== undefined) {
-            setIsLoading(true);
-            // Step 4: Content submission
-            await session.call({
-              name: "create_task",
-              args: [title, description, priority, dueDate],
-            })}
-            alert("task created successfully")
-            // router.push('/');
-          }catch (e) {
-            console.error(e);
-            setIsLoading(false);
-          }
+
+    // Step 3: Handle form submission
+    if (!session) return;
+    try {
+      if (
+        title.trim() !== "" ||
+        description.trim() !== "" ||
+        priority.trim() !== "" ||
+        dueDate !== undefined
+      ) {
+        console.log("title :::: ", title);
+        console.log("description :::: ", description);
+        console.log("priority :::: ", Number(priority));
+        console.log("dueDate :::: ", new Date(dueDate).getTime());
+
+        setIsLoading(true);
+        // Step 4: Content submission
+        await session.call({
+          name: "create_task",
+          args: [
+            title,
+            description,
+            Number(priority),
+            new Date(dueDate).getTime(),
+          ],
+        });
+      }
+      console.log("task created successfully");
+      router.push("/home");
+    } catch (e) {
+      console.error(e);
+      setIsLoading(false);
+    }
 
     // await addTodo({
     //   id: uuidv4(),
@@ -52,7 +68,13 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
     //   status: "pending", // or any default status
     //   created_at: new Date().toISOString(),
     // });
-    console.log("the data you entered is: ",title, description, priority,dueDate)
+    console.log(
+      "the data you entered is: ",
+      title,
+      description,
+      priority,
+      dueDate
+    );
     // Reset form fields after successful submission
     setTitle("");
     setDescription("");
@@ -60,7 +82,7 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
     setDueDate("");
     setModalOpen(false); // Close modal after submission
     router.refresh();
-  
+
     // alert("Task added successfully!"); // Show success message after submission
   };
   useEffect(() => {
@@ -69,11 +91,11 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
     console.log("priority:", priority);
     console.log("dueDate:", dueDate);
   }, [title, description, priority, dueDate]);
-  
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 bg-gray-800 p-6 rounded-lg shadow-lg text-white w-full max-w-md"
+      className="flex flex-col h-96 gap-3 bg-gray-800 p-6 rounded-lg shadow-lg text-white w-full max-w-md"
     >
       <h3 className="font-bold text-lg text-center">Add New Task</h3>
 
@@ -119,9 +141,9 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
           <option value="" disabled>
             Select priority
           </option>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
+          <option value={0}>High</option>
+          <option value={1}>Medium</option>
+          <option value={2}>Low</option>
         </select>
       </div>
 
@@ -148,4 +170,4 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
   );
 };
 
-export default AddModalContent
+export default AddModalContent;
