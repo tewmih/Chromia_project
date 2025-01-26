@@ -12,49 +12,90 @@ query get_transaction() {
 
 //task related functions
 //1
-query get_all_task() {
-    return task @* { } ( $.to_struct() );
+query get_all_tasks(user_id:byte_array,pointer:integer,task_number:integer):(pointer: integer, tasks: list<task_dto>) {
+    val tasks = task @* { .user.id == user_id } (
+        @sort_desc @omit .rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val
+
+        )
+    ) offset pointer limit task_number;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
+    );
+}
+
+query get_single_task_by_id(user_id: byte_array, task_id: byte_array): task {
+    return task @ { .id == task_id, .id == user_id };
 }
 
 //2
-query get_pending_tasks() {
-    val acccount = auth.authenticate();
-    val user = user @ { .id == acccount.id } ( $ );
-    require(is_user(user), "Not the owner of the task");
-    return task @* { .status == is_completed.pending } (
-        @sort_desc @omit .created_at,
-        $.to_struct()
-    );
-}
-
-// query get_tasks_by_status(
-//     status: text,
-//     pointer: integer,
-//     n_tasks: integer
-// ): (pointer: integer, tasks: list<task_dto>) {
-//     val tasks = task @* { .status == status } (
-//         @sort_desc @omit task.rowid,
-//         task_dto (
-//             task.id,
-//             task.title,
-//             task.description,
-//             task.status,
-//             task.due_date,
-//         )
-//     ) offset pointer limit n_tasks;
-//     return (
-//         pointer = pointer + tasks.size(),
-//         tasks = tasks
+// query get_pending_tasks() {
+//     val acccount = auth.authenticate();
+//     val user = user @ { .id == acccount.id } ( $ );
+//     require(is_user(user), "Not the owner of the task");
+//     return task @* { .status == is_completed.pending } (
+//         @sort_desc @omit .created_at,
+//         $.to_struct()
 //     );
 // }
-query get_completed_tasks(user) {
-    require(is_user(user), "only the owner of the task is allowed to see tasks");
 
-    return task @* { .status == is_completed.completed } (
-        @sort_desc .created_at,
-        $.to_struct()
+query get_completed_tasks(
+    status: is_completed,
+    pointer: integer,
+    n_tasks: integer
+): (pointer: integer, tasks: list<task_dto>) {
+    val tasks = task @* { .status == is_completed.completed } (
+        @sort_desc @omit task.rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val
+        )
+    ) offset pointer limit n_tasks;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
     );
 }
+query get_pending_tasks(
+    status: is_completed,
+    pointer: integer,
+    n_tasks: integer
+): (pointer: integer, tasks: list<task_dto>) {
+    val tasks = task @* { .status == is_completed.pending } (
+        @sort_desc @omit task.rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val
+        )
+    ) offset pointer limit n_tasks;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
+    );
+}
+// query get_completed_tasks(user) {
+//     require(is_user(user), "only the owner of the task is allowed to see tasks");
+
+//     return task @* { .status == is_completed.completed } (
+//         @sort_desc .created_at,
+//         $.to_struct()
+//     );
+// }
 
 query high_priority() {
     return task @* { .priority_val == priority.high } (
@@ -80,4 +121,27 @@ query low_priority() {
 query upcoming_tasks(user) {
     // require(op_context.is_signer(user.id), "only the owner can see the upcoming tasks");
     return task @ { .due_date > last_known_time() } ( $.to_struct() );
+}
+query get_tasks_by_due_date(
+    status: text,
+    pointer: integer,
+    n_tasks: integer
+): (pointer: integer, tasks: list<task_dto>) {
+    val tasks = task @* { .due_date == .due_date } (
+        @sort_desc @omit task.rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val,
+
+
+        )
+    ) offset pointer limit n_tasks;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
+    );
 }
