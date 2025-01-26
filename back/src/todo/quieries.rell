@@ -173,3 +173,24 @@ query get_tasks_by_due_date(
         tasks = tasks
     );
 }
+
+query get_upcoming_tasks(
+    pointer:integer,
+    n_tasks: integer
+): (pointer:integer, tasks:list<task_dto>){
+    val tasks = task @* { .due_date > last_known_time() } (
+        @sort_desc @omit task.rowid,
+        task_dto (
+            task.id,
+            task.title,
+            task.description,
+            task.status,
+            task.due_date,
+            task.priority_val,
+        )
+    ) offset pointer limit n_tasks;
+    return (
+        pointer = pointer + tasks.size(),
+        tasks = tasks
+    );   
+}

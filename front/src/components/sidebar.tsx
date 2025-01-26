@@ -37,8 +37,8 @@ const Sidebar: React.FC = () => {
   return (
     <aside
       className={`${
-        isCollapsed ? "w-20" : "w-64"
-      } bg-fuchsia-950 h-screen p-4 border-r border-gray-700 text-gray-300 transition-all duration-300`}
+        isCollapsed ? "w-20" : "w-35"
+      } bg-fuchsia-950 h-screen p-4 border-r border-gray-700 text-gray-300 transition-all duration-300 mt-16 z-50 fixed`}
     >
       {/* Toggle Button */}
       <button

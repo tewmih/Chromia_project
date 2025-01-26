@@ -5,8 +5,9 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { SlRefresh } from "react-icons/sl";
 import { Modal } from "./Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTAppStore } from "@/store/stateStore";
 
 interface TaskProps {
   task: ITask;
@@ -19,23 +20,75 @@ function TaskBox({ task }: TaskProps) {
 
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
-  const [dueDate, setDueDate] = useState(
-    task.due_date ? new Date(task.due_date) : null
-  );
+  const [dueDate, setDueDate] = useState("");
   const [editPriority, setEditPriority] = useState(task.priority_val);
 
   const [status, setStatus] = useState(task.status);
+  const [CompletedTasks, setCompletedTasks] = useState("");
 
-  const toggleStatus = () => {
-    setStatus((prevStatus) =>
-      prevStatus === "pending" ? "completed" : "pending"
-    );
+  const { session } = useTAppStore();
+  useEffect(() => {
+    const fetchCompletedTasks = async () => {
+      if (!session) {
+        console.log("No active session");
+        return;
+      }
+
+      try {
+        const { tasks } = await session?.query<any>("get_completed_tasks", {
+          user_id: session.account.id,
+          pointer: 0,
+          task_number: 100,
+        });
+        setCompletedTasks(tasks);
+        console.log("Completed tasks fetched:", tasks);
+      } catch (error) {
+        console.error("Failed to fetch completed tasks:", error);
+      }
+    };
+
+    fetchCompletedTasks();
+  }, [session]);
+
+  const toggleStatus = async () => {
+    if (!session) {
+      console.log("No active session");
+      return;
+    }
+
+    try {
+      await session?.call<any>("update_task_status", {
+        task_id: task.id,
+        status: status === "pending" ? "completed" : "pending",
+      });
+
+      console.log("Task status updated successfully");
+      setStatus((prevStatus) =>
+        prevStatus === "pending" ? "completed" : "pending"
+      );
+    } catch (error) {
+      console.error("Failed to update task status:", error);
+    }
   };
 
-  const handleEditSubmit = () => {
-    setEditModalOpen(false);
+  const handleEditSubmit = async () => {
     console.log(editDescription + editPriority + editTitle + dueDate);
-    setDueDate(null);
+    if (!session) return;
+    try {
+      await session?.call<any>("update_task", {
+        task_id: task.id,
+        title: editTitle,
+        description: editDescription,
+        due_date: new Date(dueDate).getTime(),
+        priority_val: editPriority,
+      });
+      console.log("Task edited successfully");
+    } catch (error) {
+      console.error("Failed to edit task", error);
+    }
+
+    setEditModalOpen(false);
+    setDueDate("");
     setEditPriority("low");
     setEditDescription("");
     setEditTitle("");
@@ -43,13 +96,10 @@ function TaskBox({ task }: TaskProps) {
   };
 
   return (
-    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-64">
-      {/* Task Title */}
+    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4">
       <div className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600">
         {task.title}
       </div>
-
-      {/* Priority */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Priority:</span>
         <span className="text-sm font-semibold text-red-500">
@@ -58,9 +108,9 @@ function TaskBox({ task }: TaskProps) {
       </div>
 
       {/* Status */}
-      <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-gray-600 mr-24">status:</span>
-        
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium text-gray-600">status:</span>
+
         <input
           type="checkbox"
           checked={status === "completed"}
@@ -69,15 +119,17 @@ function TaskBox({ task }: TaskProps) {
         />
         {status === "completed" ? (
           <>
-            <IoCheckmarkDoneSharp size={20} className="text-green-600" />
             <span className="text-xs font-semibold text-green-600">
               Completed
-            </span>
+            </span>{" "}
+            <IoCheckmarkDoneSharp size={20} className="text-green-600" />
           </>
         ) : (
           <>
+            <span className="text-xs font-semibold text-red-600">
+              Pending...
+            </span>
             <SlRefresh size={20} className="text-red-600" />
-            <span className="text-xs font-semibold text-red-600">Pending...</span>
           </>
         )}
       </div>
@@ -85,9 +137,7 @@ function TaskBox({ task }: TaskProps) {
       {/* Due Date */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Due Date:</span>
-        <span className="text-sm text-gray-500">
-          {dueDate ? dueDate.toISOString().split("T")[0] : "No due date"}
-        </span>
+        <span className="text-sm text-gray-500">{dueDate}</span>
       </div>
 
       {/* Dropdown for Description */}
@@ -171,13 +221,8 @@ function TaskBox({ task }: TaskProps) {
               <input
                 type="date"
                 className="h-9 bg-gray-700 text-white px-2 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
-                value={dueDate ? dueDate.toISOString().split("T")[0] : ""}
-                onChange={(e) => {
-                  const selectedDate = e.target.value
-                    ? new Date(e.target.value)
-                    : null;
-                  setDueDate(selectedDate);
-                }}
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
               />
             </div>
 
