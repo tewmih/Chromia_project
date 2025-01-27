@@ -31,13 +31,3 @@ filters{
 }
 
 status: 0 | 1; 
-in to do type
-      await session?.call<any>("update_task_status", {
-        task_id: task.id,
-        status: status === 1 ? 0: 1,
-      });
-
-      console.log("Task status updated successfully");
-      setStatus((prevStatus) =>
-        prevStatus === 1 ? 0 : 1
-        in taskBox
