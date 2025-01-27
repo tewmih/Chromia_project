@@ -3,7 +3,6 @@
 import { useTAppStore } from "@/store/stateStore";
 import React, { useState, useEffect } from "react";
 import TaskBox from "@/components/TaskBox";
-
 const UpcomingTasks = () => {
   const { session } = useTAppStore();
   const [tasks, setTasks] = useState([]);
