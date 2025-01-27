@@ -21,38 +21,38 @@ function TaskBox({ task }: TaskProps) {
 
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState(task.due_date);
   const [editPriority, setEditPriority] = useState<"high" | "medium" | "low">(
     task.priority_val
   );
 
   const [status, setStatus] = useState(task.status);
-  const [CompletedTasks, setCompletedTasks] = useState("");
+  // const [CompletedTasks, setCompletedTasks] = useState("");
 
   const { session } = useTAppStore();
 
-  useEffect(() => {
-    const fetchCompletedTasks = async () => {
-      if (!session) {
-        console.log("No active session");
-        return;
-      }
+  // useEffect(() => {
+  //   const fetchCompletedTasks = async () => {
+  //     if (!session) {
+  //       console.log("No active session");
+  //       return;
+  //     }
 
-      try {
-        const { tasks } = await session?.query<any>("get_completed_tasks", {
-          user_id: session.account.id,
-          pointer: 0,
-          task_number: 100,
-        });
-        setCompletedTasks(tasks);
-        console.log("Completed tasks fetched:", tasks);
-      } catch (error) {
-        console.error("Failed to fetch completed tasks:", error);
-      }
-    };
+  //     try {
+  //       const { tasks,pointer } = await session?.query<any>("get_completed_tasks", {
+  //         user_id: session.account.id,
+  //         pointer: 0,
+  //         task_number: 100,
+  //       });
+  //       setCompletedTasks(tasks);
+  //       console.log("Completed tasks fetched:", tasks);
+  //     } catch (error) {
+  //       console.error("Failed to fetch completed tasks:", error);
+  //     }
+  //   };
 
-    fetchCompletedTasks();
-  }, [session]);
+  //   fetchCompletedTasks();
+  // }, [session]);
 
   const toggleStatus = async () => {
     if (!session) {
@@ -132,43 +132,51 @@ function TaskBox({ task }: TaskProps) {
       <div className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600">
         {task.title}
       </div>
+
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Priority:</span>
-        <span className="text-sm font-semibold text-red-500">
+        <span
+          className={`text-sm font-semibold ${
+            task.priority_val === "high"
+              ? "text-red-500"
+              : task.priority_val === "medium"
+              ? "text-yellow-500"
+              : "text-green-500"
+          }`}
+        >
           {task.priority_val}
         </span>
       </div>
 
-      {/* Status */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-600 mr-24">Status:</span>
-        <input
-          type="checkbox"
-          checked={status === "completed"}
-          onChange={toggleStatus}
-          className="h-4 w-4 cursor-pointer"
-        />
-        {status === "completed" ? (
-          <>
-            <span className="text-xs font-semibold text-green-600">
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-sm font-medium text-gray-600">Status:</span>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={status === "completed"}
+            onChange={toggleStatus}
+            className="h-4 w-4 cursor-pointer"
+          />
+          {status === "completed" ? (
+            <span className="text-xs font-semibold text-green-600 flex items-center gap-1">
               Completed
+              <IoCheckmarkDoneSharp size={20} className="text-green-600" />
             </span>
-            <IoCheckmarkDoneSharp size={20} className="text-green-600" />
-          </>
-        ) : (
-          <>
-            <span className="text-xs font-semibold text-red-600">
-              Pending...
+          ) : (
+            <span className="text-xs font-semibold text-red-600 flex items-center gap-1">
+              Pending
+              <SlRefresh size={20} className="text-red-600" />
             </span>
-            <SlRefresh size={20} className="text-red-600" />
-          </>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Due Date */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Due Date:</span>
-        <span className="text-sm text-gray-500">{dueDate}</span>
+        <span className="text-sm text-gray-500">
+          {new Date(dueDate).toLocaleDateString()}
+        </span>
       </div>
 
       {/* Dropdown for Description */}

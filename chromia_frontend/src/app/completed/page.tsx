@@ -8,25 +8,25 @@ const CompletedTasks = () => {
   const { session } = useTAppStore();
   const [allTasks, setAllTasks] = useState([]);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        if (!session) return;
+  // useEffect(() => {
+  //   const fetchTasks = async () => {
+  //     try {
+  //       if (!session) return;
 
-        const { tasks,pointer } = await session.query<any>("get_completed_tasks", {
-          pointer: 0,
-          n_tasks: 100,
-        });
+  //       const { tasks,pointer } = await session.query<any>("get_completed_tasks", {
+  //         pointer: 0,
+  //         n_tasks: 100,
+  //       });
 
-        setAllTasks(tasks);
-        console.log("Completed tasks:", tasks);
-      } catch (err) {
-        console.error("Failed to fetch completed tasks", err);
-      }
-    };
+  //       setAllTasks(tasks);
+  //       console.log("Completed tasks:", tasks);
+  //     } catch (err) {
+  //       console.error("Failed to fetch completed tasks", err);
+  //     }
+  //   };
 
-    fetchTasks();
-  }, [session]);
+  //   fetchTasks();
+  // }, [session]);
 
   return (
     <div

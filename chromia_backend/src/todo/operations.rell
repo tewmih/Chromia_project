@@ -50,3 +50,12 @@ operation delete_task(id: byte_array) {
     val user = user @ { account };
     delete task @ { id, .user.id == user.id };
 }
+
+operation update_task_status(id: byte_array, selected_status: is_completed){
+   update task @ { id}(if(selected_status == .status.is_completed.complate){
+    .status=selected_status
+   }else{
+    .status=selected_status.pending
+   })
+
+}
