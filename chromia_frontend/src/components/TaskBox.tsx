@@ -14,7 +14,7 @@ interface TaskProps {
   setTaskCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function TaskBox({ task,setTaskCompleted }: TaskProps) {
+function TaskBox({ task, setTaskCompleted }: TaskProps) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -24,10 +24,8 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
   const [editPriority, setEditPriority] = useState<"high" | "medium" | "low">(
     task.priority_val
   );
+  const { session, setNewTaskCheck, newTaskCheck } = useTAppStore();
 
-
-  const { session } = useTAppStore();
-  console.log("Tasks -------------- ", task);
   const toggleStatus = async () => {
     if (!session) return;
     try {
@@ -36,13 +34,13 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
           name: "pend_task",
           args: [task.id],
         });
-        setTaskCompleted(false);
+        setNewTaskCheck(!newTaskCheck);
       } else if (task.status === "pending") {
         await session.call({
           name: "complete_task",
           args: [task.id],
         });
-        setTaskCompleted(true);
+        setNewTaskCheck(!newTaskCheck);
       }
       toast.success("Task status updated successfully");
     } catch (err) {
@@ -51,28 +49,11 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchCompletedTasks = async () => {
-  //     if (!session) {
-  //       console.log("No active session");
-  //       return;
-  //     }
-
-  //     try {
-  //       const { tasks,pointer } = await session?.query<any>("get_completed_tasks", {
-  //         user_id: session.account.id,
-  //         pointer: 0,
-  //         task_number: 100,
-  //       });
-  //       setCompletedTasks(tasks);
-  //       console.log("Completed tasks fetched:", tasks);
-  //     } catch (error) {
-  //       console.error("Failed to fetch completed tasks:", error);
-  //     }
-  //   };
-
-  //   fetchCompletedTasks();
-  // }, [session]);
+  const priorityToNumber = {
+    high: 0,
+    medium: 1,
+    low: 2,
+  };
 
   const handleEditSubmit = async () => {
     if (!session) return;
@@ -91,24 +72,19 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
           task.id,
           editTitle,
           editDescription,
-          editPriority,
+          priorityToNumber[editPriority],
           new Date(dueDate).getTime(),
         ],
       });
       console.log("Task edited successfully");
       setEditModalOpen(false);
-      setDueDate("");
-      setEditPriority("low");
-      setEditDescription("");
-      setEditTitle("");
       toast.success("Task edited successfully");
-      router.refresh();
+      setNewTaskCheck(!newTaskCheck);
     } catch (error) {
       console.error("Failed to edit task", error);
       toast.error("Failed to edit task");
     }
   };
-
   const handleDeleteTask = async () => {
     if (!session) return;
     try {
@@ -119,7 +95,7 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
       console.log("Task deleted successfully");
       setDeleteModalOpen(false);
       toast.success("Task deleted successfully");
-      router.refresh();
+      setNewTaskCheck(!newTaskCheck);
     } catch (error) {
       console.error("Failed to delete task", error);
       toast.error("Failed to delete task");
@@ -127,67 +103,67 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
   };
 
   return (
-    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-80">
+    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-72">
       <div className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600">
-      {task.title}
+        {task.title}
       </div>
 
       <div className="flex items-center justify-between mb-2">
-      <span className="text-sm font-medium text-gray-600">Priority:</span>
-      <span
-      className={`text-sm font-semibold ${
-      task.priority_val === "high"
-        ? "text-red-500"
-        : task.priority_val === "medium"
-        ? "text-yellow-500"
-        : "text-green-500"
-      }`}
-      >
-      {task.priority_val}
-      </span>
+        <span className="text-sm font-medium text-gray-600">Priority:</span>
+        <span
+          className={`text-sm font-semibold ${
+            task.priority_val === "high"
+              ? "text-red-500"
+              : task.priority_val === "medium"
+              ? "text-yellow-500"
+              : "text-green-500"
+          }`}
+        >
+          {task.priority_val}
+        </span>
       </div>
 
       {/* Status */}
       <div className="flex items-center justify-between mb-2">
-      <span className="text-sm font-medium text-gray-600">Status:</span>
-      <div className="flex items-center gap-2">
-      <input
-      type="checkbox"
-      checked={task.status === "completed"}
-      onChange={toggleStatus}
-      className="h-4 w-4 cursor-pointer"
-      />
-      {task.status === "completed" ? (
-      <span className="text-xs font-semibold text-green-600 flex items-center gap-1">
-        Completed
-        <IoCheckmarkDoneSharp size={20} className="text-green-600" />
-      </span>
-      ) : (
-      <span className="text-xs font-semibold text-red-600 flex items-center gap-1">
-        Pending
-        <SlRefresh size={20} className="text-red-600" />
-      </span>
-      )}
-      </div>
+        <span className="text-sm font-medium text-gray-600">Status:</span>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={task.status === "completed"}
+            onChange={toggleStatus}
+            className="h-4 w-4 cursor-pointer"
+          />
+          {task.status === "completed" ? (
+            <span className="text-xs font-semibold text-green-600 flex items-center gap-1">
+              Completed
+              <IoCheckmarkDoneSharp size={20} className="text-green-600" />
+            </span>
+          ) : (
+            <span className="text-xs font-semibold text-red-600 flex items-center gap-1">
+              Pending
+              <SlRefresh size={20} className="text-red-600" />
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Due Date */}
       <div className="flex items-center justify-between mb-2">
-      <span className="text-sm font-medium text-gray-600">Due Date:</span>
-      <span className="text-sm text-gray-500">
-      {new Date(dueDate).toLocaleDateString()}
-      </span>
+        <span className="text-sm font-medium text-gray-600">Due Date:</span>
+        <span className="text-sm text-gray-500">
+          {new Date(dueDate).toLocaleDateString()}
+        </span>
       </div>
 
       {/* Dropdown for Description */}
       <details className="mb-2">
-      <summary className="cursor-pointer text-gray-600 text-sm group-hover:text-gray-800">
-      Description
-      </summary>
-      <p className="text-gray-500 text-sm mt-1">{task.description}</p>
+        <summary className="cursor-pointer text-gray-600 text-sm group-hover:text-gray-800">
+          Description
+        </summary>
+        <p className="text-gray-500 text-sm mt-1">{task.description}</p>
       </details>
-            {/* Additional Actions */}
-            <div className="absolute bottom-1 right-2 transition-opacity duration-300 flex gap-5">
+      {/* Additional Actions */}
+      <div className="absolute bottom-1 right-2 transition-opacity duration-300 flex gap-5">
         <FaRegEdit
           size={17}
           color="blue"

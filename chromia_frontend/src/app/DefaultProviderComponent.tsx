@@ -47,7 +47,7 @@ const DefaultProviderComponent = ({
         </header>
         <div className="flex">
           {session && <Sidebar />}
-          <main className="flex-1 min-h-screen p-6 pt-20">{children}</main>
+          <main className="flex-1 min-h-screen p-6 pt-20 bg-white">{children}</main>
         </div>
         <footer>
           <Footer />

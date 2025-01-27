@@ -19,7 +19,7 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
   const [dueDate, setDueDate] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-  const { session } = useTAppStore();
+  const { session, setNewTaskCheck, newTaskCheck } = useTAppStore();
   if (!session) {
     console.log("no session in addModalContent ::::  " + session);
   }
@@ -76,7 +76,7 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
     setPriority("");
     setDueDate("");
     setModalOpen(false); // Close modal after submission
-    router.refresh();
+    setNewTaskCheck(!newTaskCheck);
 
     // alert("Task added successfully!"); // Show success message after submission
   };

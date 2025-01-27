@@ -5,16 +5,14 @@ import TaskBax from "./TaskBox";
 import { GetAlltodos } from "@/lib/api";
 import { useTAppStore } from "@/store/stateStore";
 
-
 const ToDoList = () => {
   const [isFilterOpened, setFilterOpened] = useState(false);
-  const { session } = useTAppStore();
+  const { session, newTaskCheck } = useTAppStore();
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [priority, setPriority] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
   const [taskCompleted, setTaskCompleted] = useState(false);
-  console.log("00000000000000000000000 :::: ", taskCompleted);
   useEffect(() => {
     const fetchAlllTasks = async () => {
       try {
@@ -32,29 +30,7 @@ const ToDoList = () => {
       }
     };
     fetchAlllTasks();
-  }, [session, taskCompleted]); // This will trigger when taskCompleted changes
-
-  // const session = useSessionContext();
-  // const accountId = session?.account.id;
-
-  // useEffect(() => {
-  //   const fetchTasks = async () => {
-  //     try {
-  //       const fetchedTasks = await GetAlltodos();
-  //       setTasks(fetchedTasks);
-  //     } catch (err) {
-  //       console.error("Failed to fetch tasks", err);
-  //     }
-  //   };
-  //   fetchTasks();
-
-  //   //       const fetchTasks = async () => {
-
-  //   //     // setTasks(all_tasks);
-
-  //   //  }
-  //   //  fetchTasks();
-  // }, []);
+  }, [session, taskCompleted, newTaskCheck]);
 
   // Filter and sort tasks
   const filteredTasks = tasks
@@ -78,7 +54,9 @@ const ToDoList = () => {
     });
 
   return (
-    <div>
+    <div className="bg-white p-4  pl-40 pr-10 w-full h-full">
+      <h1 className="text-3xl font-bold mb-6 text-center">Your To-Do List</h1>
+
       <button onClick={() => setFilterOpened((prev) => !prev)} className="mb-4">
         <span>
           <svg
@@ -151,7 +129,11 @@ const ToDoList = () => {
       <div className="pt-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredTasks.map((task) => (
-            <TaskBax key={task.id} task={task} setTaskCompleted={setTaskCompleted} />
+            <TaskBax
+              key={task.id}
+              task={task}
+              setTaskCompleted={setTaskCompleted}
+            />
           ))}
         </div>
       </div>

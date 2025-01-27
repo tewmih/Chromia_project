@@ -12,6 +12,7 @@ interface taskprops {
 export const Task: React.FC<taskprops> = ({ task }) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [taskCompleted, setTaskCompleted] = useState<boolean>(false);
   const [editName, setEditName] = useState<string>(task.title);
   const [editDescription, setEditDescription] = useState<string>(
     task.description
@@ -26,7 +27,7 @@ export const Task: React.FC<taskprops> = ({ task }) => {
   return (
     <tr key={task.id}>
       <td className="flex flex-row gap-4">
-        <TaskBax task={task} />
+        <TaskBax task={task} setTaskCompleted={setTaskCompleted} />
         <Modal modalOpen={editModalOpen} setModalOpen={setEditModalOpen}>
           <form
             onSubmit={handleEditSubmit}

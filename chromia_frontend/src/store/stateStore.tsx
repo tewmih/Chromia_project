@@ -3,7 +3,7 @@ import { IClient } from "postchain-client";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-// type Theme = "dark" | "light";
+type Theme = "dark" | "light";
 
 type AppStore = {
   theme: Theme;
@@ -15,6 +15,8 @@ type AppStore = {
   setSession: (session: Session | undefined) => void;
   setClient: (client: IClient | undefined) => void;
   setLogout: (logout: () => Promise<void>) => void;
+  newTaskCheck: boolean;
+  setNewTaskCheck: (newTaskCheck: boolean) => void;
 };
 
 export const useTAppStore = create<AppStore>()(
@@ -38,7 +40,8 @@ export const useTAppStore = create<AppStore>()(
       logout: () => Promise.resolve(undefined),
       setSession: (session) => set({ session }),
       setClient: (client) => set({ client }),
-      setLogout: (logout) => set({ logout }),
+      setNewTaskCheck: (newTaskCheck) => set({ newTaskCheck }),
+      newTaskCheck: false,      setLogout: (logout) => set({ logout }),
     }),
     {
       name: "theme-storage",
