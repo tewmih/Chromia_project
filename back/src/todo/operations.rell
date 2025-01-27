@@ -15,13 +15,13 @@ operation create_task(title: text, description: text, priority, due_date: intege
     create task ( title, user, description, .priority_val = priority, .due_date = date );
 }
 
-operation update_task(task_id: byte_array,title: text, description: text, priority,  date: integer) {
+operation update_task(task_id: byte_array, title: text, description: text, priority, date: integer) {
 //    title= title==null? task @{.id}($.title):title;
- var account = auth.authenticate();
+    var account = auth.authenticate();
     val user = user @ { account };
 
     update task @ {
-        .id==task_id,
+        .id == task_id,
         .user.id == user.id
     } (
         .title = title,
@@ -34,14 +34,15 @@ operation update_task(task_id: byte_array,title: text, description: text, priori
 
 operation complete_task(id: byte_array) {
     val account = auth.authenticate();
-    val user = user @ { account.id } ( $ );
-    require(op_context.is_signer(user.id), "only the owner completes the task");
+    val user = user @ { account };
+    // require(op_context.is_signer(user.id), "only the owner completes the task");
     update task @ { id, .user.id == user.id } ( .status = is_completed.completed );
 }
+
 operation pend_task(id: byte_array) {
     val account = auth.authenticate();
-    val user = user @ { account.id } ( $ );
-    require(op_context.is_signer(user.id), "only the owner completes the task");
+    val user = user @ { account };
+    // require(op_context.is_signer(user.id), "only the owner completes the task");
     update task @ { id, .user.id == user.id } ( .status = is_completed.pending );
 }
 

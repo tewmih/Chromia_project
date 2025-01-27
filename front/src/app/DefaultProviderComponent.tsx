@@ -17,7 +17,7 @@ const DefaultProviderComponent = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { setSession } = useTAppStore();
+  const { setSession, session } = useTAppStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const DefaultProviderComponent = ({
           <Navbar />
         </header>
         <div className="flex">
-          <Sidebar />
+          {session && <Sidebar />}
           <main className="flex-1 min-h-screen p-6 pt-20">{children}</main>
         </div>
         <footer>

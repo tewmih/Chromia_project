@@ -13,6 +13,7 @@ import {
 import { getRandomUserName } from "@/utility/user";
 import { CustomizedModalProps } from "./types";
 import { useTAppStore } from "@/store/stateStore";
+import { useRouter } from "next/navigation";
 declare global {
   interface Window {
     ethereum: any;
@@ -26,6 +27,7 @@ export default function CustomizedModal({
 }: CustomizedModalProps) {
   const { client, setSession, setLogout } = useTAppStore();
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const router = useRouter();
   if (!isOpen) return null;
 
   const handleWalletSelect = (wallet: string) => {
@@ -57,16 +59,17 @@ export default function CustomizedModal({
         },
         // loginKeyStore: createSessionStorageLoginKeyStore(),
       });
-      console.log("Session initialized",session);
+      console.log("Session initialized", session);
       setSession(session);
       setLogout(logout);
+      router.push("/home");
     } else {
       // 5. Create a new account by signing a message using metamask
       const authDescriptor = createSingleSigAuthDescriptorRegistration(
         ["A", "T"],
         evmKeyStore.id
       );
-      const { session,logout } = await registerAccount(
+      const { session, logout } = await registerAccount(
         client,
         evmKeyStore,
         registrationStrategy.open(authDescriptor, {
@@ -82,6 +85,7 @@ export default function CustomizedModal({
       );
       setSession(session);
       setLogout(logout);
+      router.push("/home");
     }
     console.log("Session initialized");
   };

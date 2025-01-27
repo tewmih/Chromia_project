@@ -6,16 +6,15 @@ import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { SlRefresh } from "react-icons/sl";
 import { Modal } from "./Modal";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTAppStore } from "@/store/stateStore";
 import { toast } from "react-toastify";
 
 interface TaskProps {
   task: ITask;
+  setTaskCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function TaskBox({ task }: TaskProps) {
-  const router = useRouter();
+function TaskBox({ task,setTaskCompleted }: TaskProps) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -26,13 +25,30 @@ function TaskBox({ task }: TaskProps) {
     task.priority_val
   );
 
-  const [status, setStatus] = useState(task.status);
 
   const { session } = useTAppStore();
-  const toggleStatus = () => {
-    setStatus((prevStatus) =>
-      prevStatus === "pending" ? "completed" : "pending"
-    );
+  console.log("Tasks -------------- ", task);
+  const toggleStatus = async () => {
+    if (!session) return;
+    try {
+      if (task.status === "completed") {
+        await session.call({
+          name: "pend_task",
+          args: [task.id],
+        });
+        setTaskCompleted(false);
+      } else if (task.status === "pending") {
+        await session.call({
+          name: "complete_task",
+          args: [task.id],
+        });
+        setTaskCompleted(true);
+      }
+      toast.success("Task status updated successfully");
+    } catch (err) {
+      console.error("Failed to update task status", err);
+      toast.error("Failed to update task status");
+    }
   };
 
   const priorityToNumber = {
@@ -112,11 +128,11 @@ function TaskBox({ task }: TaskProps) {
 
         <input
           type="checkbox"
-          checked={status === "completed"}
+          checked={task.status === "completed"}
           onChange={toggleStatus}
           className="h-4 w-4 cursor-pointer"
         />
-        {status === "completed" ? (
+        {task.status === "completed" ? (
           <>
             <IoCheckmarkDoneSharp size={20} className="text-green-600" />
             <span className="text-xs font-semibold text-green-600">

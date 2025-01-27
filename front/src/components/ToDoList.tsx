@@ -13,12 +13,12 @@ const ToDoList = () => {
   const [priority, setPriority] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
-  console.log("session :::: ", session);
+  const [taskCompleted, setTaskCompleted] = useState(false);
+  console.log("00000000000000000000000 :::: ", taskCompleted);
   useEffect(() => {
     const fetchAlllTasks = async () => {
       try {
         if (!session) {
-          console.log("session :::: " + session);
           return;
         }
         const { tasks, pointer } = await session?.query<any>("get_all_tasks", {
@@ -27,14 +27,12 @@ const ToDoList = () => {
           task_number: 100,
         });
         setTasks(tasks);
-        console.log("all_tasks :::: ", tasks);
       } catch (err) {
         console.error("Failed to fetch tasks", err);
       }
     };
     fetchAlllTasks();
-    // console.log("session :::: " + session?.account.id);
-  }, [session]);
+  }, [session, taskCompleted]); // This will trigger when taskCompleted changes
 
   // const session = useSessionContext();
   // const accountId = session?.account.id;
@@ -153,7 +151,7 @@ const ToDoList = () => {
       <div className="pt-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredTasks.map((task) => (
-            <TaskBax key={task.id} task={task} />
+            <TaskBax key={task.id} task={task} setTaskCompleted={setTaskCompleted} />
           ))}
         </div>
       </div>

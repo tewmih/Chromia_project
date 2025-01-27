@@ -36,28 +36,33 @@ export default function Navbar() {
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Left Aligned */}
-            <div className="text-xl font-bold text-white flex-grow">
-              <Link href="/" className="hover:text-blue-400 transition-colors">
-                To-Do App
-              </Link>
-            </div>
-            {/* Right-Side Buttons (Only visible on larger screens) */}
-            <div className="hidden md:flex items-center space-x-4">
-              <AddTask />
-              {links.map((link) => (
+              <div className="text-xl font-bold text-white flex-grow">
                 <Link
-                  key={link.name}
-                  href={link.href}
-                  className={`${
-                    pathname === link.href
-                      ? "text-blue-400 border-b-2 border-blue-400 mr-2 "
-                      : "hover:text-blue-400 hover:border-b-2 hover:border-blue-400 mr-2"
-                  } transition-all pb-1`}
+                  href="/"
+                  className="hover:text-blue-400 transition-colors"
                 >
-                  {link.name}
+                  To-Do App
                 </Link>
-              ))}
-            </div>
+              </div>
+            {/* Right-Side Buttons (Only visible on larger screens) */}
+            {session && (
+              <div className="hidden md:flex items-center space-x-4">
+                <AddTask />
+                {links.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={`${
+                      pathname === link.href
+                        ? "text-blue-400 border-b-2 border-blue-400 mr-2 "
+                        : "hover:text-blue-400 hover:border-b-2 hover:border-blue-400 mr-2"
+                    } transition-all pb-1`}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            )}
             {/* Connect Wallet Button - Always Visible */}
             {!session ? (
               <button
@@ -100,7 +105,7 @@ export default function Navbar() {
         {isMobileMenuOpen && <style>{`body { overflow: hidden; }`}</style>}
       </div>
       <div className="">
-        {isMobileMenuOpen && (
+        {isMobileMenuOpen && session && (
           <div className="md:hidden mx-4 !bg-gray-700 fixed mt-2 rounded-lg right-0 top-16 shadow-lg z-9999">
             <ul className="flex flex-col space-y-4 p-4">
               {links.map((link) => (
