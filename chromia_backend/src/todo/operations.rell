@@ -1,0 +1,53 @@
+operation register_user(name) {
+    val account = register_account();
+    // val account = create_account_with_auth(single_sig_auth_descriptor(pubkey, set(["A", "T"])));
+    require(not name.empty(), "Name is required");
+    create user ( name, account.id, account );
+}
+
+operation create_task(title: text, description: text, priority, due_date: integer) {
+    val account = auth.authenticate();
+    val user = user @ { account.id } ( $ );
+    require(not title.empty(), "title is required");
+    require(not description.empty(), "Description is required");
+    // require(priority in [priority.high,medium,priority.low], "Priority is required");
+    val date = last_known_time() + due_date;
+    create task ( title, user, description, .priority_val = priority, .due_date = date );
+}
+
+operation update_task(task_id: byte_array, title: text, description: text, priority, date: integer) {
+//    title= title==null? task @{.id}($.title):title;
+    var account = auth.authenticate();
+    val user = user @ { account };
+
+    update task @ {
+        .id == task_id,
+        .user.id == user.id
+    } (
+        .title = title,
+        .description = description,
+        .priority_val = priority,
+        .due_date = date,
+        .updated_at = last_known_time()
+    );
+}
+
+operation complete_task(id: byte_array) {
+    val account = auth.authenticate();
+    val user = user @ { account };
+    // require(op_context.is_signer(user.id), "only the owner completes the task");
+    update task @ { id, .user.id == user.id } ( .status = is_completed.completed );
+}
+
+operation pend_task(id: byte_array) {
+    val account = auth.authenticate();
+    val user = user @ { account };
+    // require(op_context.is_signer(user.id), "only the owner completes the task");
+    update task @ { id, .user.id == user.id } ( .status = is_completed.pending );
+}
+
+operation delete_task(id: byte_array) {
+    val account = auth.authenticate();
+    val user = user @ { account };
+    delete task @ { id, .user.id == user.id };
+}

@@ -1,0 +1,33 @@
+entity user {
+    mutable name;
+    key id: byte_array;
+    account;
+}
+
+enum priority {
+    high,
+    medium,
+    low,
+}
+
+entity task {
+    mutable title: text;//front
+    key id: byte_array= op_context.transaction.tx_rid;
+    index user;//key..//front
+    // mutable is_completed:boolean=false;
+    mutable description: text;//forntend
+    mutable due_date: timestamp = last_known_time()*10;
+    mutable priority_val: priority;
+    created_at: timestamp = last_known_time();
+    mutable status: is_completed = is_completed.pending;
+    mutable updated_at: timestamp = 0;
+}
+
+enum is_completed {
+    pending,
+    completed
+}
+// entity task_status{
+//     index task;
+
+// }

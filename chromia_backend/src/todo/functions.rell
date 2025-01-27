@@ -1,0 +1,7 @@
+function last_known_time()
+    = if (op_context.exists) op_context.last_block_time else block @ { } ( @max .timestamp ) ?: 0;
+
+function is_user(user){
+    require(op_context.is_signer(user.id), "only the owner can do this task");
+    return true;
+}
