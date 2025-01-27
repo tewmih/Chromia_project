@@ -74,27 +74,6 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
   //   fetchCompletedTasks();
   // }, [session]);
 
-  const toggleStatus = async () => {
-    if (!session) {
-      console.log("No active session");
-      return;
-    }
-
-    try {
-      await session?.call<any>("update_task_status", {
-        task_id: task.id,
-        status: status === "pending" ? "completed" : "pending",
-      });
-
-      console.log("Task status updated successfully");
-      setStatus((prevStatus) =>
-        prevStatus === "pending" ? "completed" : "pending"
-      );
-    } catch (error) {
-      console.error("Failed to update task status:", error);
-    }
-  };
-
   const handleEditSubmit = async () => {
     if (!session) return;
     try {
@@ -148,70 +127,67 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
   };
 
   return (
-    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4">
+    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-80">
       <div className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600">
-        {task.title}
+      {task.title}
       </div>
 
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-600">Priority:</span>
-        <span
-          className={`text-sm font-semibold ${
-            task.priority_val === "high"
-              ? "text-red-500"
-              : task.priority_val === "medium"
-              ? "text-yellow-500"
-              : "text-green-500"
-          }`}
-        >
-          {task.priority_val}
-        </span>
+      <span className="text-sm font-medium text-gray-600">Priority:</span>
+      <span
+      className={`text-sm font-semibold ${
+      task.priority_val === "high"
+        ? "text-red-500"
+        : task.priority_val === "medium"
+        ? "text-yellow-500"
+        : "text-green-500"
+      }`}
+      >
+      {task.priority_val}
+      </span>
       </div>
 
       {/* Status */}
+      <div className="flex items-center justify-between mb-2">
+      <span className="text-sm font-medium text-gray-600">Status:</span>
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-600 mr-24">status:</span>
-
-        <input
-          type="checkbox"
-          checked={task.status === "completed"}
-          onChange={toggleStatus}
-          className="h-4 w-4 cursor-pointer"
-        />
-        {task.status === "completed" ? (
-          <>
-            <IoCheckmarkDoneSharp size={20} className="text-green-600" />
-            <span className="text-xs font-semibold text-green-600">
-              Completed
-              <IoCheckmarkDoneSharp size={20} className="text-green-600" />
-            </span>
-          ) : (
-            <span className="text-xs font-semibold text-red-600 flex items-center gap-1">
-              Pending
-              <SlRefresh size={20} className="text-red-600" />
-            </span>
-          )}
-        </div>
+      <input
+      type="checkbox"
+      checked={task.status === "completed"}
+      onChange={toggleStatus}
+      className="h-4 w-4 cursor-pointer"
+      />
+      {task.status === "completed" ? (
+      <span className="text-xs font-semibold text-green-600 flex items-center gap-1">
+        Completed
+        <IoCheckmarkDoneSharp size={20} className="text-green-600" />
+      </span>
+      ) : (
+      <span className="text-xs font-semibold text-red-600 flex items-center gap-1">
+        Pending
+        <SlRefresh size={20} className="text-red-600" />
+      </span>
+      )}
+      </div>
       </div>
 
       {/* Due Date */}
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-600">Due Date:</span>
-        <span className="text-sm text-gray-500">
-          {new Date(dueDate).toLocaleDateString()}
-        </span>
+      <span className="text-sm font-medium text-gray-600">Due Date:</span>
+      <span className="text-sm text-gray-500">
+      {new Date(dueDate).toLocaleDateString()}
+      </span>
       </div>
 
       {/* Dropdown for Description */}
       <details className="mb-2">
-        <summary className="cursor-pointer text-gray-600 text-sm group-hover:text-gray-800">
-          Description
-        </summary>
-        <p className="text-gray-500 text-sm mt-1">{task.description}</p>
+      <summary className="cursor-pointer text-gray-600 text-sm group-hover:text-gray-800">
+      Description
+      </summary>
+      <p className="text-gray-500 text-sm mt-1">{task.description}</p>
       </details>
-
-      {/* Additional Actions */}
-      <div className="absolute bottom-1 right-2 transition-opacity duration-300 flex gap-5">
+            {/* Additional Actions */}
+            <div className="absolute bottom-1 right-2 transition-opacity duration-300 flex gap-5">
         <FaRegEdit
           size={17}
           color="blue"
@@ -341,5 +317,4 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
     </div>
   );
 }
-
 export default TaskBox;
