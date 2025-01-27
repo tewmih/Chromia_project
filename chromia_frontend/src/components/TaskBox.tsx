@@ -20,7 +20,7 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
 
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState(task.due_date);
   const [editPriority, setEditPriority] = useState<"high" | "medium" | "low">(
     task.priority_val
   );
@@ -51,10 +51,48 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
     }
   };
 
-  const priorityToNumber = {
-    high: 0,
-    medium: 1,
-    low: 2,
+  // useEffect(() => {
+  //   const fetchCompletedTasks = async () => {
+  //     if (!session) {
+  //       console.log("No active session");
+  //       return;
+  //     }
+
+  //     try {
+  //       const { tasks,pointer } = await session?.query<any>("get_completed_tasks", {
+  //         user_id: session.account.id,
+  //         pointer: 0,
+  //         task_number: 100,
+  //       });
+  //       setCompletedTasks(tasks);
+  //       console.log("Completed tasks fetched:", tasks);
+  //     } catch (error) {
+  //       console.error("Failed to fetch completed tasks:", error);
+  //     }
+  //   };
+
+  //   fetchCompletedTasks();
+  // }, [session]);
+
+  const toggleStatus = async () => {
+    if (!session) {
+      console.log("No active session");
+      return;
+    }
+
+    try {
+      await session?.call<any>("update_task_status", {
+        task_id: task.id,
+        status: status === "pending" ? "completed" : "pending",
+      });
+
+      console.log("Task status updated successfully");
+      setStatus((prevStatus) =>
+        prevStatus === "pending" ? "completed" : "pending"
+      );
+    } catch (error) {
+      console.error("Failed to update task status:", error);
+    }
   };
 
   const handleEditSubmit = async () => {
@@ -74,7 +112,7 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
           task.id,
           editTitle,
           editDescription,
-          priorityToNumber[editPriority],
+          editPriority,
           new Date(dueDate).getTime(),
         ],
       });
@@ -85,12 +123,13 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
       setEditDescription("");
       setEditTitle("");
       toast.success("Task edited successfully");
-      window.location.reload();
+      router.refresh();
     } catch (error) {
       console.error("Failed to edit task", error);
       toast.error("Failed to edit task");
     }
   };
+
   const handleDeleteTask = async () => {
     if (!session) return;
     try {
@@ -101,23 +140,30 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
       console.log("Task deleted successfully");
       setDeleteModalOpen(false);
       toast.success("Task deleted successfully");
-      window.location.reload();
+      router.refresh();
     } catch (error) {
       console.error("Failed to delete task", error);
       toast.error("Failed to delete task");
     }
   };
+
   return (
-    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-64">
-      {/* Task Title */}
+    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4">
       <div className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600">
         {task.title}
       </div>
 
-      {/* Priority */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Priority:</span>
-        <span className="text-sm font-semibold text-red-500">
+        <span
+          className={`text-sm font-semibold ${
+            task.priority_val === "high"
+              ? "text-red-500"
+              : task.priority_val === "medium"
+              ? "text-yellow-500"
+              : "text-green-500"
+          }`}
+        >
           {task.priority_val}
         </span>
       </div>
@@ -137,22 +183,23 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
             <IoCheckmarkDoneSharp size={20} className="text-green-600" />
             <span className="text-xs font-semibold text-green-600">
               Completed
+              <IoCheckmarkDoneSharp size={20} className="text-green-600" />
             </span>
-          </>
-        ) : (
-          <>
-            <SlRefresh size={20} className="text-red-600" />
-            <span className="text-xs font-semibold text-red-600">
-              Pending...
+          ) : (
+            <span className="text-xs font-semibold text-red-600 flex items-center gap-1">
+              Pending
+              <SlRefresh size={20} className="text-red-600" />
             </span>
-          </>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Due Date */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-600">Due Date:</span>
-        <span className="text-sm text-gray-500">{dueDate}</span>
+        <span className="text-sm text-gray-500">
+          {new Date(dueDate).toLocaleDateString()}
+        </span>
       </div>
 
       {/* Dropdown for Description */}
@@ -174,6 +221,7 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
         />
 
         <Modal modalOpen={editModalOpen} setModalOpen={setEditModalOpen}>
+          {/* Edit Modal */}
           <form
             onSubmit={handleEditSubmit}
             method="dialog"
@@ -219,9 +267,6 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
                   setEditPriority(e.target.value as "high" | "medium" | "low")
                 }
               >
-                <option value="" disabled>
-                  Select priority
-                </option>
                 <option value="high">High</option>
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
@@ -259,6 +304,15 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
             </div>
           </form>
         </Modal>
+
+        <FaRegTrashAlt
+          size={17}
+          color="red"
+          cursor="pointer"
+          onClick={() => setDeleteModalOpen(true)}
+          title="delete task"
+        />
+
         <Modal modalOpen={deleteModalOpen} setModalOpen={setDeleteModalOpen}>
           <div className="flex flex-col gap-6 bg-gray-800 p-6 rounded-xl shadow-lg text-center">
             <h3 className="font-bold text-xl text-white">Confirm Delete</h3>
@@ -275,7 +329,7 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
               <button
                 className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                 onClick={() => {
-                  handleDeleteTask(task.id);
+                  handleDeleteTask();
                 }}
               >
                 Delete
@@ -283,14 +337,6 @@ function TaskBox({ task,setTaskCompleted }: TaskProps) {
             </div>
           </div>
         </Modal>
-
-        <FaRegTrashAlt
-          size={17}
-          color="red"
-          cursor="pointer"
-          onClick={() => setDeleteModalOpen(true)}
-          title="delete task"
-        />
       </div>
     </div>
   );

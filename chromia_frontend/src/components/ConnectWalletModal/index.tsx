@@ -1,4 +1,6 @@
+
 "use client";
+
 import React, { useState } from "react";
 
 import {
@@ -89,6 +91,7 @@ export default function CustomizedModal({
     }
     console.log("Session initialized");
   };
+
 
   const handleConnect = () => {
     if (selectedWallet) {
@@ -184,6 +187,7 @@ export default function CustomizedModal({
                     />
                     <path
                       d="M24.3739 22.1875L28.133 23.9053L22.8184 25.4567L24.3739 22.1875Z"
+
                       fill="#233447"
                     />
                     <path
@@ -257,7 +261,8 @@ export default function CustomizedModal({
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap">
                     MetaMask
-                  </span>
+
+                    </span>
                 </div>
               </button>
             </li>
@@ -340,3 +345,4 @@ export default function CustomizedModal({
     </div>
   );
 }
+
