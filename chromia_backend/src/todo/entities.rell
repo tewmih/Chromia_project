@@ -25,7 +25,8 @@ entity task {
 
 enum is_completed {
     pending,
-    completed
+    completed,
+    expired
 }
 // entity task_status{
 //     index task;

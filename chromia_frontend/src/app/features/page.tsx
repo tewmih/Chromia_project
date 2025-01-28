@@ -39,7 +39,7 @@ export default function About() {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row px-6 py-12">
+    <div className="flex flex-col md:flex-row px-6 py-12  bg-black">
       {/* Left Section - Image */}
       <div className="w-full md:w-1/3 flex mt-10 justify-center items-start mb-6 md:mb-0">
   <svg
@@ -66,7 +66,7 @@ export default function About() {
 
 
       {/* Right Section - Features */}
-      <div className="w-full md:w-2/3 flex flex-col items-center md:items-start p-6">
+      <div className="w-full md:w-2/3 flex flex-col items-center md:items-start p-6 ">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
           Welcome to To-Do dApp
         </h1>

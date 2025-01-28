@@ -3,13 +3,13 @@ import React from 'react';
 
 export default function Footer() {
     return (
-      <footer className="bg-gray-800 text-white py-6">
+      <footer className="bg-gray-800 text-white py-6 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Footer Content */}
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Left Section */}
             <div className="text-center md:text-left">
-              <h3 className="text-lg font-semibold">To-Do App</h3>
+              <h3 className="text-lg font-semibold">To-Do DApp</h3>
               <p className="text-sm text-gray-400">
                 Organize your tasks, stay productive, and achieve your goals.
               </p>
@@ -48,7 +48,7 @@ export default function Footer() {
             {/* Right Section */}
             <div className="text-center md:text-right">
               <p className="text-sm text-gray-400">
-                © {new Date().getFullYear()} To-Do App. All rights reserved.
+                © {new Date().getFullYear()} To-Do DApp. All rights reserved.
               </p>
             </div>
           </div>

@@ -8,6 +8,7 @@ import { Modal } from "./Modal";
 import { useState } from "react";
 import { useTAppStore } from "@/store/stateStore";
 import { toast } from "react-toastify";
+import Spinner from "@/utility/Progress_spinner";
 
 interface TaskProps {
   task: ITask;
@@ -25,8 +26,37 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
     task.priority_val
   );
   const { session, setNewTaskCheck, newTaskCheck } = useTAppStore();
+  const [loading, setLoading] = useState(false);
+
+  // useEffect(()=>{
+  //   const check_expired = async ()=>{
+  //     if(!session) return;
+  //     const diff = new Date(dueDate).getTime() - new Date().getTime();
+  //     if(diff<=0 && task.status== 'pending'){
+  //       setLoading(true);
+  //       try {
+  //         await session.call({
+  //           name: "update_overdue_tasks_status",
+  //           args: [task.id],
+  //         });
+  //         setNewTaskCheck(!newTaskCheck);
+  //         setLoading(false);
+  //         // setTaskCompleted(true);
+  //       } catch (error) {
+          
+  //         toast.error("Task is expired with error: " + error);
+  //       }
+  //       setTaskCompleted(true);
+  //     }
+  //   }
+  //   check_expired();
+
+  // },[session,task.status,newTaskCheck])
+  
+
 
   const toggleStatus = async () => {
+    setLoading(true);
     if (!session) return;
     try {
       if (task.status === "completed") {
@@ -35,17 +65,20 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
           args: [task.id],
         });
         setNewTaskCheck(!newTaskCheck);
+        setLoading(false);
+        // setTaskCompleted(true);
       } else if (task.status === "pending") {
         await session.call({
           name: "complete_task",
           args: [task.id],
         });
         setNewTaskCheck(!newTaskCheck);
+        setLoading(false);
+
       }
       toast.success("Task status updated successfully");
     } catch (err) {
-      console.error("Failed to update task status", err);
-      toast.error("Failed to update task status");
+      toast.error("Failed to update task status with error  "+err);
     }
   };
 
@@ -58,14 +91,7 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
   const handleEditSubmit = async () => {
     if (!session) return;
     try {
-      console.log(
-        "Editing task with ID:",
-        task.id,
-        editTitle,
-        editDescription,
-        editPriority,
-        new Date(dueDate).getTime()
-      );
+      setLoading(true);
       await session?.call<any>({
         name: "update_task",
         args: [
@@ -76,10 +102,10 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
           new Date(dueDate).getTime(),
         ],
       });
-      console.log("Task edited successfully");
       setEditModalOpen(false);
       toast.success("Task edited successfully");
       setNewTaskCheck(!newTaskCheck);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to edit task", error);
       toast.error("Failed to edit task");
@@ -88,14 +114,15 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
   const handleDeleteTask = async () => {
     if (!session) return;
     try {
+      setLoading(true);
       await session?.call<any>({
         name: "delete_task",
         args: [task.id],
       });
-      console.log("Task deleted successfully");
       setDeleteModalOpen(false);
       toast.success("Task deleted successfully");
       setNewTaskCheck(!newTaskCheck);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to delete task", error);
       toast.error("Failed to delete task");
@@ -103,7 +130,11 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
   };
 
   return (
-    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-72">
+
+    <>
+    {/* {loading && <Spinner message="updating..."/>} */}
+    {/* {!loading && */}
+    <div className="group relative bg-white border border-gray-300 rounded-lg shadow-md p-4 w-72 ">
       <div className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600">
         {task.title}
       </div>
@@ -291,6 +322,8 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
         </Modal>
       </div>
     </div>
+{/* } */}
+    </>
   );
 }
 export default TaskBox;

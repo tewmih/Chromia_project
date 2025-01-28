@@ -1,11 +1,15 @@
 // query get_user(){
 //     return user @*{}($.to_struct());
 // }
-query get_user() {
+query get_all_users() {
     return user @* { } ( $ );
     //6,12
 }
 
+query get_specific_user(account_id:byte_array) {
+    return user @* {.account.id==account_id}( $ );
+
+}
 //task related functions
 //1
 query get_all_tasks(

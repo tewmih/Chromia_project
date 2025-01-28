@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {   useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTAppStore } from "@/store/stateStore";
 import { toast } from "react-toastify";
+import Spinner from "./Progress_spinner";
 
 interface AddModalContentProps {
   setModalOpen: (open: boolean) => void;
@@ -21,8 +22,9 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { session, setNewTaskCheck, newTaskCheck } = useTAppStore();
   if (!session) {
-    console.log("no session in addModalContent  " + session);
+    toast.success("you haven't registered(loged in) yet");
   }
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,11 +37,6 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
         priority.trim() !== "" ||
         dueDate !== undefined
       ) {
-        console.log("title  ", title);
-        console.log("description  ", description);
-        console.log("priority  ", priority);
-        console.log("dueDate  ", new Date(dueDate).getTime());
-
         setIsLoading(true);
         await session.call({
           name: "create_task",
@@ -51,23 +48,13 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
           ],
         });
       }
-      console.log("task created successfully");
       router.push("/home");
       setIsLoading(false);
       setModalOpen(false);
       toast.success("Task created successfully");
     } catch (e) {
-      console.error(e);
-      setIsLoading(false);
-      toast.error("Error creating task");
+      toast.error("Error creating task  "+e);
     }
-    console.log(
-      "the data you entered is: ",
-      title,
-      description,
-      priority,
-      dueDate
-    );
     setTitle("");
     setDescription("");
     setPriority("");
@@ -76,26 +63,25 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
     setNewTaskCheck(!newTaskCheck);
   };
 
-  useEffect(() => {
-    console.log("title:", title);
-    console.log("description:", description);
-    console.log("priority:", priority);
-    console.log("dueDate:", dueDate);
-  }, [title, description, priority, dueDate]);
-
   return (
     <form
-      onSubmit={handleSubmit}
-      className="flex flex-col h-96 gap-3 bg-gray-800 p-6 rounded-lg shadow-lg text-white w-full max-w-md"
-    >
-      <h3 className="font-bold text-lg text-center">Add New Task</h3>
+  onSubmit={handleSubmit}
+  className="flex flex-col h-96 gap-3 bg-gray-800 p-6 rounded-lg shadow-lg text-white w-full max-w-md"
+>
+  <h3 className="font-bold text-lg text-center">Add New Task</h3>
 
-      <div className="flex flex-col">
+  {isLoading && (
+    <Spinner message="creating task..."/>
+  )}
+
+  {!isLoading && (
+    <>
+      <div className="flex flex-col z-50">
         <label htmlFor="name" className="text-sm font-medium mb-1">
           Task Title
         </label>
         <input
-          id="name"
+          id="name" 
           className="h-9 bg-gray-700 w-full px-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="text"
           placeholder="Enter task name"
@@ -157,7 +143,10 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
       >
         Submit
       </button>
-    </form>
+    </>
+  )}
+</form>
+
   );
 };
 

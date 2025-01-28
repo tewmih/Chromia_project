@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
+
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import AddTask from "./AddTask";
 import CustomizedModal from "./ConnectWalletModal";
 import { useTAppStore } from "@/store/stateStore";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
+
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -27,8 +29,8 @@ export default function Navbar() {
   const handleLogout = async () => {
     setSession(undefined);
     await logout();
-    router.push("/"); // Redirect to the landing page after logout
     setIsModalOpen(false); // Close modal if it's open
+      router.push("/"); // Redirect to the landing page after logout
 
   };
   
@@ -43,7 +45,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="bg-fuchsia-950 text-gray-300 shadow-lg fixed top-0 left-0 w-full z-50 border-b border-gray-600">
+      <div className="bg-fuchsia-950 text-gray-300 shadow-lg fixed top-0 left-0 w-full z-30 border-b border-gray-600">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Left Aligned */}
@@ -52,7 +54,7 @@ export default function Navbar() {
                   href="/"
                   className="hover:text-blue-400 transition-colors"
                 >
-                  To-Do App
+                  To-Do DApp
                 </Link>
               </div>
             {/* Right-Side Buttons (Only visible on larger screens) */}
@@ -65,13 +67,21 @@ export default function Navbar() {
                     href={link.href}
                     className={`${
                       pathname === link.href
-                        ? "text-blue-400 border-b-2 border-blue-400 mr-2 "
+                        ? "text-blue-400 border-b-2 border-blue-400 mr-4 "
                         : "hover:text-blue-400 hover:border-b-2 hover:border-blue-400 mr-2"
                     } transition-all pb-1`}
                   >
                     {link.name}
                   </Link>
                 ))}
+                                <div className="relative">
+                  <img
+                    src={session.user?.profilePicture || "/default-profile.png"}
+                    alt="User Profile"
+                    className="w-10 h-10 rounded-full border-2 border-white shadow-lg cursor-pointer"
+                    onClick={() => router.push("/profile")}
+                  />
+                </div>
               </div>
             )}
             {/* Connect Wallet Button - Always Visible */}
@@ -117,7 +127,7 @@ export default function Navbar() {
       </div>
       <div className="">
         {isMobileMenuOpen && session && (
-          <div className="md:hidden mx-4 !bg-gray-700 fixed mt-2 rounded-lg right-0 top-16 shadow-lg z-9999">
+          <div className="md:hidden mx-4 !bg-gray-700 fixed mt-2 rounded-lg right-0 top-16 shadow-lg z-50">
             <ul className="flex flex-col space-y-4 p-4">
               {links.map((link) => (
                 <li key={link.name} className="font-semibold">

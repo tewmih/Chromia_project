@@ -5,7 +5,7 @@ export default function LandingHomeComponent() {
   return (
     <div className="relative flex-1 min-h-screen flex items-center justify-center bg-gray-900 text-white">
       {/* Blurred Background Image */}
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0 ">
         <Image
           src="/chromia.png" // Ensure this is in the public folder
           alt="Chromia Blockchain background image"
@@ -18,7 +18,7 @@ export default function LandingHomeComponent() {
       </div>
 
       {/* Foreground Content */}
-      <div className="relative z-10 w-full max-w-4xl px-4 text-center">
+      <div className="relative w-full max-w-4xl px-4 text-center">
         <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-extrabold mb-4 tracking-tight">
           Empower Your To-Do List with Chromia
         </h2>

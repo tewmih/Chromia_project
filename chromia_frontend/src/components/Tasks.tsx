@@ -3,7 +3,7 @@
 import { ITask } from "@/types/todoTypes";
 import { Modal } from "./Modal";
 import { useState } from "react";
-import TaskBax from "./TaskBox";
+import TaskBox from "./TaskBox";
 
 interface taskprops {
   task: ITask;
@@ -27,7 +27,7 @@ export const Task: React.FC<taskprops> = ({ task }) => {
   return (
     <tr key={task.id}>
       <td className="flex flex-row gap-4">
-        <TaskBax task={task} setTaskCompleted={setTaskCompleted} />
+        <TaskBox task={task} setTaskCompleted={setTaskCompleted} />
         <Modal modalOpen={editModalOpen} setModalOpen={setEditModalOpen}>
           <form
             onSubmit={handleEditSubmit}
