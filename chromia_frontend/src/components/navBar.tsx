@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import AddTask from "./AddTask";
 import CustomizedModal from "./ConnectWalletModal";
 import { useTAppStore } from "@/store/stateStore";
+import {useRouter} from "next/navigation";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -13,14 +14,24 @@ export default function Navbar() {
   const { session, setSession, logout } = useTAppStore();
   const [isMounted, setIsMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const router = useRouter();
   const handleLogin = () => {
     setIsModalOpen(false);
   };
 
+  // const handleLogout = async () => {
+  //   setSession(undefined);
+  //   await logout();
+  // };
   const handleLogout = async () => {
     setSession(undefined);
     await logout();
+    router.push("/"); // Redirect to the landing page after logout
+    setIsModalOpen(false); // Close modal if it's open
+
   };
+  
   // Prevents hydration errors
   useEffect(() => {
     setIsMounted(true);

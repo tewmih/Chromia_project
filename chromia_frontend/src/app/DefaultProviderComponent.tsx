@@ -47,7 +47,13 @@ const DefaultProviderComponent = ({
         </header>
         <div className="flex">
           {session && <Sidebar />}
-          <main className="flex-1 min-h-screen pl-6 pt-16 bg-white w-full ">{children}</main>
+          <main
+            className={`flex-1 min-h-screen pt-16 bg-white w-full ${
+              session ? "pl-6" : ""
+            }`}
+          >
+            {children}
+          </main>
         </div>
         <footer>
           <Footer />
