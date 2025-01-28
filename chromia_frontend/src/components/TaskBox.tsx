@@ -233,7 +233,7 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
               <input
                 type="date"
                 className="h-9 bg-gray-700 text-white px-2 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
-                value={dueDate}
+                value={new Date(dueDate).toISOString().split("T")[0]}
                 onChange={(e) => setDueDate(e.target.value)}
               />
             </div>

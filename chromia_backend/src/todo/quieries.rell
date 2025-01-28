@@ -6,13 +6,13 @@ query get_user() {
     //6,12
 }
 
-query get_transaction() {
-    return transaction @* { } ( $.to_struct() );
-}
-
 //task related functions
 //1
-query get_all_tasks(user_id: byte_array, pointer: integer, task_number: integer): (pointer: integer, tasks: list<task_dto>) {
+query get_all_tasks(
+    user_id: byte_array,
+    pointer: integer,
+    task_number: integer
+): (pointer: integer, tasks: list<task_dto>) {
     val tasks = task @* { .user.id == user_id } (
         @sort_desc @omit .rowid,
         task_dto (
@@ -46,11 +46,11 @@ query get_single_task_by_id(user_id: byte_array, task_id: byte_array): task {
 // }
 
 query get_completed_tasks(
-    user_id:byte_array,
+    user_id: byte_array,
     pointer: integer,
     n_tasks: integer
 ): (pointer: integer, tasks: list<task_dto>) {
-    val tasks = task @* { .status == is_completed.completed ,.user.id==user_id} (
+    val tasks = task @* { .status == is_completed.completed, .user.id == user_id } (
         @sort_desc @omit task.rowid,
         task_dto (
             task.id,
@@ -115,6 +115,7 @@ query get_high_priority_tasks(pointer: integer, n_tasks: integer): (pointer: int
         tasks = tasks
     );
 }
+
 query get_medium_priority_tasks(pointer: integer, n_tasks: integer): (pointer: integer, tasks: list<task_dto>) {
     val tasks = task @* { .priority_val == priority.high, } (
         @sort_desc @omit task.rowid,
@@ -132,6 +133,7 @@ query get_medium_priority_tasks(pointer: integer, n_tasks: integer): (pointer: i
         tasks = tasks
     );
 }
+
 query get_low_priority_tasks(pointer: integer, n_tasks: integer): (pointer: integer, tasks: list<task_dto>) {
     val tasks = task @* { .priority_val == priority.high, } (
         @sort_desc @omit task.rowid,
@@ -150,8 +152,6 @@ query get_low_priority_tasks(pointer: integer, n_tasks: integer): (pointer: inte
     );
 }
 
-
-
 query get_tasks_by_due_date(
     status: text,
     pointer: integer,
@@ -167,7 +167,7 @@ query get_tasks_by_due_date(
             task.due_date,
             task.priority_val,
         )
-    ) offset pointer limit  n_tasks;
+    ) offset pointer limit n_tasks;
     return (
         pointer = pointer + tasks.size(),
         tasks = tasks
@@ -175,10 +175,11 @@ query get_tasks_by_due_date(
 }
 
 query get_upcoming_tasks(
-    pointer:integer,
+    user_id: byte_array,
+    pointer: integer,
     n_tasks: integer
-): (pointer:integer, tasks:list<task_dto>){
-    val tasks = task @* { .due_date > last_known_time() } (
+): (pointer:integer, tasks:list<task_dto>) {
+    val tasks = task @* { .user.id == user_id, .due_date > last_known_time(), .status == is_completed.pending } (
         @sort_desc @omit task.rowid,
         task_dto (
             task.id,
@@ -192,5 +193,5 @@ query get_upcoming_tasks(
     return (
         pointer = pointer + tasks.size(),
         tasks = tasks
-    );   
+    );
 }

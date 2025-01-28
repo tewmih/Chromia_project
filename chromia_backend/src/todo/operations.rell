@@ -11,14 +11,16 @@ operation create_task(title: text, description: text, priority, due_date: intege
     require(not title.empty(), "title is required");
     require(not description.empty(), "Description is required");
     // require(priority in [priority.high,medium,priority.low], "Priority is required");
-    val date = last_known_time() + due_date;
-    create task ( title, user, description, .priority_val = priority, .due_date = date );
+    require(is_valid_date(due_date), "Tasks must be scheduled a head to now");
+   
+    create task ( title, user, description, .priority_val = priority, .due_date=due_date );
 }
 
-operation update_task(task_id: byte_array, title: text, description: text, priority, date: integer) {
+operation update_task(task_id: byte_array, title: text, description: text, priority, due_date: integer) {
 //    title= title==null? task @{.id}($.title):title;
     var account = auth.authenticate();
     val user = user @ { account };
+    require(is_valid_date(due_date), " due date must be sceduled from now onwards");
 
     update task @ {
         .id == task_id,
@@ -27,7 +29,7 @@ operation update_task(task_id: byte_array, title: text, description: text, prior
         .title = title,
         .description = description,
         .priority_val = priority,
-        .due_date = date,
+        .due_date = due_date,
         .updated_at = last_known_time()
     );
 }

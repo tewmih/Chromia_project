@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-// import { addTodo } from "@/lib/api";
 import { useRouter } from "next/navigation";
-// import { v4 as uuidv4 } from "uuid";
 import { useTAppStore } from "@/store/stateStore";
 import { toast } from "react-toastify";
 
@@ -15,19 +13,20 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [priority, setPriority] = useState<"high" | "medium" | "low" | "">("");
-  const [dueDate, setDueDate] = useState("");
+  const [priority, setPriority] = useState<"high" | "medium" | "low" | "">(
+    "medium"
+  );
+  const [dueDate, setDueDate] = useState(new Date().getTime());
 
   const [isLoading, setIsLoading] = useState(false);
   const { session, setNewTaskCheck, newTaskCheck } = useTAppStore();
   if (!session) {
-    console.log("no session in addModalContent ::::  " + session);
+    console.log("no session in addModalContent  " + session);
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Step 3: Handle form submission
     if (!session) return;
     try {
       if (
@@ -36,19 +35,18 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
         priority.trim() !== "" ||
         dueDate !== undefined
       ) {
-        console.log("title :::: ", title);
-        console.log("description :::: ", description);
-        console.log("priority :::: ", Number(priority));
-        console.log("dueDate :::: ", new Date(dueDate).getTime());
+        console.log("title  ", title);
+        console.log("description  ", description);
+        console.log("priority  ", priority);
+        console.log("dueDate  ", new Date(dueDate).getTime());
 
         setIsLoading(true);
-        // Step 4: Content submission
         await session.call({
           name: "create_task",
           args: [
             title,
             description,
-            Number(priority),
+            priority === "high" ? 0 : priority === "medium" ? 1 : 2,
             new Date(dueDate).getTime(),
           ],
         });
@@ -70,16 +68,14 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
       priority,
       dueDate
     );
-    // Reset form fields after successful submission
     setTitle("");
     setDescription("");
     setPriority("");
-    setDueDate("");
-    setModalOpen(false); // Close modal after submission
+    setDueDate(new Date().getTime());
+    setModalOpen(false);
     setNewTaskCheck(!newTaskCheck);
-
-    // alert("Task added successfully!"); // Show success message after submission
   };
+
   useEffect(() => {
     console.log("title:", title);
     console.log("description:", description);
@@ -136,9 +132,9 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
           <option value="" disabled>
             Select priority
           </option>
-          <option value={0}>High</option>
-          <option value={1}>Medium</option>
-          <option value={2}>Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="low">Low</option>
         </select>
       </div>
 
@@ -150,8 +146,8 @@ const AddModalContent: React.FC<AddModalContentProps> = ({ setModalOpen }) => {
           type="date"
           id="dueDate"
           className="h-9 bg-gray-700 w-full px-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
+          value={new Date(dueDate).toISOString().split("T")[0]}
+          onChange={(e) => setDueDate(new Date(e.target.value).getTime())}
         />
       </div>
 
