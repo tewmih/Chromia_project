@@ -296,8 +296,8 @@ function TaskBox({ task, setTaskCompleted }: TaskProps) {
           title="delete task"
         />
 
-        <Modal modalOpen={deleteModalOpen} setModalOpen={setDeleteModalOpen}>
-          <div className="flex flex-col gap-6 bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+        <Modal modalOpen={deleteModalOpen} setModalOpen={setDeleteModalOpen} >
+          <div className="flex flex-col gap-6 bg-gray-800 p-6 rounded-xl shadow-lg text-center ">
             <h3 className="font-bold text-xl text-white">Confirm Delete</h3>
             <p className="text-gray-300">
               Are you sure you want to delete this task?

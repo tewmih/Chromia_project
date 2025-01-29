@@ -6,10 +6,10 @@ query get_all_users() {
     //6,12
 }
 
-query get_specific_user(account_id:byte_array) {
-    return user @* {.account.id==account_id}( $ );
-
+query get_specific_user(account_id: byte_array) {
+    return user @ { .account.id == account_id } ( $ );
 }
+
 //task related functions
 //1
 query get_all_tasks(
