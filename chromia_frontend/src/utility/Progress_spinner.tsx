@@ -5,7 +5,7 @@ interface spinrerProps{
 }
 const Spinner: React.FC<spinrerProps> = ({ message }) => {
   return (
-    <div className="flex items-center justify-center h-96 z-50">
+    <div className="flex items-center justify-center h-96 z-50 bg-slate-950">
       <ImSpinner9 className="animate-spin text-blue-500" />
       <p className="text-sm text-center">{message}</p>
     </div>

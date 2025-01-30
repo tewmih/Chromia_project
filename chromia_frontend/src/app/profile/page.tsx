@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Spinner from "@/utility/Progress_spinner";
 import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/components/ui/Modal";
 import { toast } from "react-toastify";
 
 // Define the user DTO interface
@@ -55,8 +55,12 @@ function ProfilePage() {
         });
 
         // Convert Buffer to hex string for id and account.id
-        const userId = userDto?.id ? Buffer.from(userDto.id).toString("hex") : "N/A";
-        const accountId = userDto?.account?.id ? Buffer.from(userDto.account.id).toString("hex") : "N/A";
+        const userId = userDto?.id
+          ? Buffer.from(userDto.id).toString("hex")
+          : "N/A";
+        const accountId = userDto?.account?.id
+          ? Buffer.from(userDto.account.id).toString("hex")
+          : "N/A";
 
         // Set the user state with the converted data
         setUser({
@@ -130,13 +134,18 @@ function ProfilePage() {
                 {user.name || "Anonymous User"}
               </h2>
               <p className="text-gray-600 text-lg mb-1">
-                <span className="font-medium text-green-500">Account Type:</span> {user.account.type || "No account provided"}
+                <span className="font-medium text-green-500">
+                  Account Type:
+                </span>{" "}
+                {user.account.type || "No account provided"}
               </p>
               <p className="text-gray-600 text-lg">
-                <span className="font-medium text-green-500">User ID:</span> {user.id || "N/A"}
+                <span className="font-medium text-green-500">User ID:</span>{" "}
+                {user.id || "N/A"}
               </p>
               <p className="text-gray-600 text-lg">
-                <span className="font-medium text-green-500">Account ID:</span> {user.account.id || "N/A"}
+                <span className="font-medium text-green-500">Account ID:</span>{" "}
+                {user.account.id || "N/A"}
               </p>
 
               {/* Additional Info Section */}

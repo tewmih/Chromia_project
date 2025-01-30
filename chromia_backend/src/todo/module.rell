@@ -5,7 +5,6 @@ import lib.ft4.accounts.strategies.{ register_account };
 
 import ^.lib.ft4.core.auth;
 import ^.lib.ft4.core.accounts.{account, create_account_with_auth, single_sig_auth_descriptor};//remove unused imports
-// import ^.lib.ft4.utils.{last_known_time}
 
 struct module_args {
     dapp_account_signer: pubkey;

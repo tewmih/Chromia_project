@@ -1,9 +1,9 @@
 "use client";
 
-import { ContextProvider } from "@/components/contextProvider";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/navBar";
-import Sidebar from "@/components/sidebar";
+import { ContextProvider } from "@/components/context/contextProvider";
+import Footer from "@/components/layout/Footer";
+import Navbar from "@/components/layout/navBar";
+import Sidebar from "@/components/navigation/sidebar";
 import { useTAppStore } from "@/store/stateStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

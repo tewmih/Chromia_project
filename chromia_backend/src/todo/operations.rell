@@ -18,17 +18,30 @@ operation create_task(title: text, description: text, priority, due_date: intege
     val user = user @ { account.id } ( $ );
     require(not title.empty(), "title is required");
     require(not description.empty(), "Description is required");
-    // require(priority in [priority.high,medium,priority.low], "Priority is required");
-    // require(is_valid_date(due_date), "Tasks must be scheduled a head to now");
 
-    create task ( title, user, description, .priority_val = priority, .due_date = due_date );
+    var current_status: is_completed;
+    if (due_date <= last_known_time()) {
+        current_status = is_completed.expired;
+        // Mark as expired if due_date is in the past
+    } else {
+        current_status = is_completed.pending;
+    }
+
+    create task ( title, user, description, .priority_val = priority, .due_date = due_date, .status = current_status );
 }
 
 operation update_task(task_id: byte_array, title: text, description: text, priority, due_date: integer) {
-//    title= title==null? task @{.id}($.title):title;
-    var account = auth.authenticate();
+    val account = auth.authenticate();
     val user = user @ { account };
-    require(is_valid_date(due_date), " due date must be sceduled from now onwards");
+    // require(is_valid_date(due_date), " due date must be sceduled from now onwards");
+
+    var current_status: is_completed;
+    if (due_date <= last_known_time()) {
+        current_status = is_completed.expired;
+        // Mark as expired if due_date is in the past
+    } else {
+        current_status = is_completed.pending;
+    }
 
     update task @ {
         .id == task_id,
@@ -38,7 +51,8 @@ operation update_task(task_id: byte_array, title: text, description: text, prior
         .description = description,
         .priority_val = priority,
         .due_date = due_date,
-        .updated_at = last_known_time()
+        .updated_at = last_known_time(),
+        .status = current_status
     );
 }
 
@@ -64,11 +78,11 @@ operation delete_task(id: byte_array) {
 
 operation update_overdue_tasks_status() {
     val account = auth.authenticate();
-    val user = user @ { account };
+    val user = user @ { account } ( $ );
 
     update task @* {
         .user.id == user.id,
-        .due_date < last_known_time(),
+        .due_date < last_known_time( ),
         .status == is_completed.pending,
     } ( .status = is_completed.expired);
 }

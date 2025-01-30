@@ -2,14 +2,13 @@
 
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { Modal } from "@/components/Modal"; // Ensure correct import path
+import { Modal } from "@/components/ui/Modal"; // Ensure correct import path
 import AddModalContent from "@/utility/AddModalContent";
 // import { useSessionContext } from "./contextProvider";
 
-
 const AddTask = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-//  const session=useSessionContext();
+  //  const session=useSessionContext();
   return (
     <div className="">
       <button
@@ -23,7 +22,6 @@ const AddTask = () => {
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <AddModalContent setModalOpen={setModalOpen} />
       </Modal>
-      
     </div>
   );
 };

@@ -3,7 +3,7 @@
 import { ITask } from "@/types/todoTypes";
 import { Modal } from "./Modal";
 import { useState } from "react";
-import TaskBox from "./TaskBox";
+import TaskBox from "./tasks/TaskBox";
 
 interface taskprops {
   task: ITask;

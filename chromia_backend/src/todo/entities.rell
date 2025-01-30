@@ -29,7 +29,3 @@ enum is_completed {
     completed,
     expired
 }
-// entity task_status{
-//     index task;
-
-// }

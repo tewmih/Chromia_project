@@ -1,14 +1,12 @@
 "use client";
 
-
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import AddTask from "./AddTask";
-import CustomizedModal from "./ConnectWalletModal";
+import AddTask from "@/components/tasks/AddTask";
+import CustomizedModal from "@/components/ConnectWalletModal";
 import { useTAppStore } from "@/store/stateStore";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -30,10 +28,9 @@ export default function Navbar() {
     setSession(undefined);
     await logout();
     setIsModalOpen(false); // Close modal if it's open
-      router.push("/"); // Redirect to the landing page after logout
-
+    router.push("/"); // Redirect to the landing page after logout
   };
-  
+
   // Prevents hydration errors
   useEffect(() => {
     setIsMounted(true);
@@ -49,14 +46,11 @@ export default function Navbar() {
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Left Aligned */}
-              <div className="text-xl font-bold text-white flex-grow">
-                <Link
-                  href="/"
-                  className="hover:text-blue-400 transition-colors"
-                >
-                  To-Do DApp
-                </Link>
-              </div>
+            <div className="text-xl font-bold text-white flex-grow">
+              <Link href="/" className="hover:text-blue-400 transition-colors">
+                To-Do DApp
+              </Link>
+            </div>
             {/* Right-Side Buttons (Only visible on larger screens) */}
             {session && (
               <div className="hidden md:flex items-center space-x-4">
@@ -74,7 +68,7 @@ export default function Navbar() {
                     {link.name}
                   </Link>
                 ))}
-                                <div className="relative">
+                <div className="relative">
                   <img
                     src={session.user?.profilePicture || "/default-profile.png"}
                     alt="User Profile"

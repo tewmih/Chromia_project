@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LiaPlusCircleSolid } from "react-icons/lia";
 import { AiOutlineHome, AiOutlineCalendar } from "react-icons/ai";
-import { Modal } from "./Modal";
+import { Modal } from "../ui/Modal";
 import { FcAbout } from "react-icons/fc";
 import { IoMdAnalytics } from "react-icons/io";
 import AddModalContent from "@/utility/AddModalContent";

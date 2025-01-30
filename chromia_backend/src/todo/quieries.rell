@@ -1,7 +1,7 @@
-query get_all_users() {
-    return user @* { } ( $.to_struct() );
-    //6,12
-}
+// query get_all_users() {
+//     return user @* { } ( $.to_struct() );
+//     //6,12
+// }
 
 query get_specific_user(user_id: byte_array): user_dto {
     return user @ { .id == user_id } (
