@@ -19,13 +19,11 @@ function is_valid_date(due_date: integer): boolean {
     if (due_date < op_context.last_block_time) return false;
     return true;
 }
+
 function get_random_number(high: integer = 100): integer {
-    if (high == 0) return 0; 
+    if (high == 0) return 0;
     return (op_context.last_block_time - op_context.block_height - op_context.op_index) % high + 1;
 }
-
-
-
 
 @extend(auth.auth_handler)
 function () = auth.add_auth_handler(

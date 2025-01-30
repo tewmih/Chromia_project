@@ -28,3 +28,13 @@ export interface FilterMethod {
 export interface TaskResponse {
   tasks: ITask[]; // Array of tasks returned by the backend
 }
+
+// Account Interface
+export interface IUserDto {
+  name: string;
+  id: Buffer; // Assuming the backend returns a Buffer for byte_array
+  account: {
+    id: Buffer; // Assuming the backend returns a Buffer for byte_array
+    type: string;
+  };
+}

@@ -2,6 +2,7 @@ entity user {
     mutable name;
     key id: byte_array;
     account;
+    // photo: text;
 }
 
 enum priority {

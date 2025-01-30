@@ -34,7 +34,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
 
         // 1. Ensure MetaMask is available
         if (!window.ethereum) {
-          throw new Error("MetaMask is not installed or not connected");
+          throw new Error("MetaMask is not installed or not connected with internet");
         }
 
         // 2. Initialize Connection
