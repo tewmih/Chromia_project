@@ -196,7 +196,7 @@ function ProfilePage() {
             className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-transform transform hover:scale-105"
             onClick={() => router.push("/home")} // Use router.push for navigation
           >
-            See Your Tasks
+            back to Your Tasks
           </button>
         </div>
 

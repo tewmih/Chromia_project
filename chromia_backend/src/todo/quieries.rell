@@ -185,3 +185,16 @@ query get_upcoming_tasks(
         tasks = tasks
     );
 }
+
+query number_of_completed_tasks(user_id: byte_array) {
+    return task @ { .status == is_completed.completed, .user.id == user_id } ( @sum 1 );
+}
+
+
+query number_of_pending_tasks(user_id: byte_array) {
+    return task @ { .status == is_completed.pending, .user.id == user_id } ( @sum 1 );
+}
+
+query number_of_expired_tasks(user_id: byte_array) {
+    return task @ { .status == is_completed.expired, .user.id == user_id } ( @sum 1 );
+}

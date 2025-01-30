@@ -7,6 +7,7 @@ import { LiaPlusCircleSolid } from "react-icons/lia";
 import { AiOutlineHome, AiOutlineCalendar } from "react-icons/ai";
 import { Modal } from "./Modal";
 import { FcAbout } from "react-icons/fc";
+import { IoMdAnalytics } from "react-icons/io";
 import AddModalContent from "@/utility/AddModalContent";
 
 const Sidebar: React.FC = () => {
@@ -15,14 +16,12 @@ const Sidebar: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false); // Fix for hydration errors
 
-
   // Ensure the component only renders on the client
   useEffect(() => {
     setHydrated(true);
   }, []);
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
-
 
   if (!hydrated) {
     return null; // Prevent rendering on the server
@@ -95,6 +94,19 @@ const Sidebar: React.FC = () => {
           >
             <AiOutlineCalendar size={20} />
             <span className={isCollapsed ? "hidden" : ""}>Completed</span>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/analaytics"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md ${
+              pathname === "/about"
+                ? "bg-gray-700 text-white"
+                : "hover:bg-gray-800 hover:text-white"
+            }`}
+          >
+            <IoMdAnalytics />
+            <span className={isCollapsed ? "hidden" : ""}>Analaytics</span>
           </Link>
         </li>
         <li>

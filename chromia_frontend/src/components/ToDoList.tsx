@@ -15,7 +15,7 @@ const ToDoList = () => {
   const [taskCompleted, setTaskCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
+   
   
   useEffect(() => {
     const fetchAlllTasks = async () => {

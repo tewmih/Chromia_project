@@ -62,8 +62,13 @@ operation delete_task(id: byte_array) {
     delete task @ { id, .user.id == user.id };
 }
 
-operation update_overdue_tasks_status(task_id: byte_array) {
+operation update_overdue_tasks_status() {
     val account = auth.authenticate();
     val user = user @ { account };
-    update task @ { .user.id == user.id, .id == task_id } ( .status = is_completed.expired );
+
+    update task @* {
+        .user.id == user.id,
+        .due_date < last_known_time(),
+        .status == is_completed.pending,
+    } ( .status = is_completed.expired);
 }
