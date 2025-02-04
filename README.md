@@ -5,6 +5,7 @@
 - **Email:** tewuhbomihret1992@gmail.com  
 - **Phone:** +251948036117  
 - **Telegram:** [@tewuhbo](https://t.me/tewuhbo)
+- **Linkedin:** https://www.linkedin.com/in/tewuhbo-mihret-5a2803263/
 
 ---
 
@@ -30,9 +31,9 @@ The **ChromWay To-do dApp** is a decentralized, multi-user task management appli
 
 ### 📋 To-do Functionality
 - Manage tasks with **add**, **update**, **complete**, and **delete** options.  
-- **Filter tasks** by **status** (completed/pending).  
+- **Filter tasks** by **status** (completed/pending/expired).  
 - **Sort tasks** by **due date** for efficient planning.  
-- **Sort tasks** by **priority** to catch high-demand tasks.  
+- **Sort tasks** by **priority**(high/medium/low) to catch high-demand tasks.  
 
 ### 📊 Dashboard Insights
 - **Overview of pending and completed tasks.**  
@@ -44,7 +45,7 @@ The **ChromWay To-do dApp** is a decentralized, multi-user task management appli
 
 ### **Prerequisites**
 1. Install and configure a **[PostgreSQL database](https://www.postgresql.org/download/)**.  
-2. Install the **Chromia CLI** by following the [Chromia Setup Guide](https://chromia.com).  
+2. Install the **Chromia CLI** by following the [Chromia Setup Guide](https://docs.chromia.com/intro/installation/cli-installation).  
 
 ### 🏃‍♂️ Running the Project Locally
 
@@ -99,6 +100,9 @@ http://localhost:3000
 
 ### **Upcoming Tasks**
 ![Upcoming Tasks](https://github.com/user-attachments/assets/8a07c2d9-1896-4323-8d89-e521281df783)
+
+### **Analytics of the tasks**
+![image](https://github.com/user-attachments/assets/04dc3d48-35b1-4f4b-bb18-aae29a0acc96)
 
 ---
 
